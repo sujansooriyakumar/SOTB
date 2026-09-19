@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: sword
   m_EditorClassIdentifier: Assembly-CSharp::WeaponItemSO
   uID: 0
-  itemName: 
-  itemDescription: 
-  sellCost: 0
+  itemName: sword
+  itemDescription: some sword
+  sellCost: 100
   weaponClass: {fileID: 0}
   damageAttribute: 0
   weaponStrength: 0
