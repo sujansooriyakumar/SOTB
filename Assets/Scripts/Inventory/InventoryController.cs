@@ -13,10 +13,10 @@ public class InventoryController : MonoBehaviour
     private Dictionary<int, int> questCompartment = new();
 
 
-    public List<InventoryItemData> weaponInventoryList = new();
-    public List<InventoryItemData> armorInventoryList = new();
-    public List<InventoryItemData> consumableInventoryList = new();
-    public List<InventoryItemData> questInventoryList = new();
+    public List<InventoryItemData> weaponCompartmentList = new();
+    public List<InventoryItemData> armorCompartmentList = new();
+    public List<InventoryItemData> consumableCompartmentList = new();
+    public List<InventoryItemData> questCompartmentList = new();
 
 
 
@@ -24,14 +24,7 @@ public class InventoryController : MonoBehaviour
     private void Start()
     {
         InitializeDatabase();
-        for (int i = 0; i < 50; i++)
-        {
-            AddItem(0);
-        }
-        for(int i = 0; i < 50; i++)
-        {
-            AddItem(1);
-        }
+    
 
 
     }
@@ -73,29 +66,23 @@ public class InventoryController : MonoBehaviour
 
     public List<InventoryItemData> GetInventoryList(Dictionary<int, int> targetDictionary)
     {
-        List<InventoryItemData> inventoryList = consumableInventoryList;
-        if (targetDictionary == weaponCompartment) inventoryList = weaponInventoryList;
-        if(targetDictionary == armorCompartment) inventoryList = armorInventoryList;
-        if(targetDictionary == questCompartment) inventoryList = questInventoryList;
-        if(targetDictionary == consumableCompartment) inventoryList = consumableInventoryList;
+        List<InventoryItemData> inventoryList = consumableCompartmentList;
+        if (targetDictionary == weaponCompartment) inventoryList = weaponCompartmentList;
+        if(targetDictionary == armorCompartment) inventoryList = armorCompartmentList;
+        if(targetDictionary == questCompartment) inventoryList = questCompartmentList;
 
         return inventoryList;
     }
 
     public Dictionary<int, int> GetTargetInventory(int uid)
     {
-        Dictionary<int, int> targetDictionary = questCompartment;
+        Dictionary<int, int> targetDictionary = consumableCompartment;
 
         ItemSO targetItem = itemDictionary[uid];
 
         if (targetItem is WeaponItemSO weaponItem)
         {
             targetDictionary = weaponCompartment;
-        }
-
-        if (targetItem is ConsumableItemSO consumableItem)
-        {
-            targetDictionary = consumableCompartment;
         }
 
         if (targetItem is ArmorItemSO armorItem)
