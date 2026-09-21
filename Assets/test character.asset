@@ -111,13 +111,13 @@ MonoBehaviour:
   maxHP: 321
   maxSP: 15
   level: 100
-  STR: 299
-  DEF: 246
-  INT: 328
-  SPI: 246
-  DEX: 175
-  AGI: 114
-  LUK: 100
+  STR: 100
+  DEF: 100
+  INT: 100
+  SPI: 100
+  DEX: 100
+  AGI: 100
+  LUK: 20
   equippedWeapon: {fileID: 11400000, guid: 63ac8974d5d6a0e4db4d3bef85587752, type: 2}
   typeWeaknesses: 
   attributeWeaknesses: 

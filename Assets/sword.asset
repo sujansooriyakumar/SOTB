@@ -19,3 +19,4 @@ MonoBehaviour:
   weaponClass: {fileID: 11400000, guid: ba988e510fcbb67418ea71113dfcf777, type: 2}
   damageAttribute: 0
   weaponStrength: 20
+  damageStat: 00000000

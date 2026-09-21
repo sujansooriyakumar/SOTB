@@ -15795,7 +15795,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 0
-  orthographic size: 9.770045
+  orthographic size: 6.28125
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -17486,7 +17486,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &952941639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20575,6 +20575,10 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   attacker: {fileID: 11400000, guid: 908cc0f8c05c12c47857aabe3cac88c4, type: 2}
+  basePower: 20
+  primaryAttribute: 00000000
+  damageAttribute: 7
+  damageType: 0
 --- !u!4 &2143940561
 Transform:
   m_ObjectHideFlags: 0
