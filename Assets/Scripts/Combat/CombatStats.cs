@@ -17,6 +17,11 @@ public class CombatStats
        statLibrary.Add(CombatStat.AGI, config.AGI);
        statLibrary.Add(CombatStat.LUK, config.LUK);
     }
+
+    public int GetStat(CombatStat stat)
+    {
+        return statLibrary[stat];
+    }
 }
 
 public enum CombatStat

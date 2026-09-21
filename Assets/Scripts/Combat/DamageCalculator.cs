@@ -46,7 +46,7 @@ public static class DamageCalculator
         float attackAttributeValue = 0f;
         foreach (CombatStat att in attackAttributes)
         {
-            attackAttributeValue += attacker_.stats.statLibrary[att];
+            attackAttributeValue += attacker_.stats.GetStat(att);
         }
         attackAttributeValue = attackAttributeValue / attackAttributes.Length;
 
@@ -64,11 +64,11 @@ public static class DamageCalculator
 
         if (attackData_.damageType == DamageType.MAGIC)
         {
-            defendAttributeValue = defender_.stats.statLibrary[CombatStat.SPI];
+            defendAttributeValue = defender_.stats.GetStat(CombatStat.SPI);
         }
         else
         {
-            defendAttributeValue = defender_.stats.statLibrary[CombatStat.DEF];
+            defendAttributeValue = defender_.stats.GetStat(CombatStat.DEF);
         }
 
         return defendAttributeValue;
@@ -143,13 +143,13 @@ public static class DamageCalculator
 
     private static float GetHitRate(CombatParticipantData attacker_)
     {
-        float result = 175f + attacker_.level + attacker_.stats.statLibrary[CombatStat.DEX] + (attacker_.stats.statLibrary[CombatStat.LUK] / 3f);
+        float result = 175f + attacker_.level + attacker_.stats.GetStat(CombatStat.DEX) + (attacker_.stats.GetStat(CombatStat.LUK) / 3f);
         return result;
     }
 
     private static float GetDodgeRate(CombatParticipantData defender_)
     {
-        float result = 100f + defender_.level + defender_.stats.statLibrary[CombatStat.AGI] + (defender_.stats.statLibrary[CombatStat.LUK] / 5f);
+        float result = 100f + defender_.level + defender_.stats.GetStat(CombatStat.AGI) + (defender_.stats.GetStat(CombatStat.LUK) / 5f);
         return result;
     }
 
@@ -172,7 +172,7 @@ public static class DamageCalculator
     public static bool CheckCrit(CombatParticipantData attacker_)
     {
         bool result = false;
-        float luck = attacker_.stats.statLibrary[CombatStat.LUK];
+        float luck = attacker_.stats.GetStat(CombatStat.LUK);
         float K = 50f;
         float critRate = (50f * (luck / (luck + K)) * ((100f + K) / 100f))/100f;
 
