@@ -5,20 +5,23 @@ using UnityEngine;
 public class SampleDebug : SerializedMonoBehaviour
 {
     public CombatParticipantSO attacker;
+    public int basePower;
+    public CombatStat[] primaryAttribute;
+    public DamageAttribute damageAttribute;
+    public DamageType damageType;
 
-    public void Start()
+
+    [Button]
+    public void CheckAttack()
     {
        AttackData sampleAttack = new AttackData();
-        CombatStat[] stat = new CombatStat[1];
-        stat[0] = CombatStat.STR;
-        sampleAttack.primaryAttribute = stat;
-        sampleAttack.damageType = DamageType.BLUNT;
-        sampleAttack.damageAttribute = DamageAttribute.FIRE;
-        sampleAttack.basePower = 110;
+     
+        sampleAttack.primaryAttribute = primaryAttribute;
+        sampleAttack.damageType = damageType;
+        sampleAttack.damageAttribute = damageAttribute;
+        sampleAttack.basePower = basePower;
+        Debug.Log(DamageCalculator.CalculateDamage(new CombatParticipantData(attacker), new CombatParticipantData(attacker), sampleAttack));
 
-        for (int i = 0; i < 50; i++)
-        {
-            Debug.Log(DamageCalculator.CalculateDamage(new CombatParticipantData(attacker), new CombatParticipantData(attacker), sampleAttack));
-        }
+     
     }
 }

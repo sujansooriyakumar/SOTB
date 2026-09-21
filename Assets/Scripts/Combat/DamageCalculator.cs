@@ -18,16 +18,25 @@ public static class DamageCalculator
         float weaknesses = GetWeaknesses(attackData_, defender_);
         float damageRoll = GetDamageRoll();
         damage = ((levelMod * attackData_.basePower * (attackingStat / defendingStat)) / 50f) + 2f;
-
-        return damage * resistances * weaknesses * damageRoll *1.5f;
+        if(!CheckHit(GetHitRate(attacker_), GetDodgeRate(defender_)))
+        {
+            return 0f;
+        }
+        float critMultiplier = 1.0f;
+        if (CheckCrit(attacker_))
+        {
+            Debug.Log("Critical Hit!");
+            critMultiplier = 1.5f;
+        }
+        return damage * resistances * weaknesses * damageRoll * critMultiplier;
     }
 
-    public static float GetDamageRoll()
+    private static float GetDamageRoll()
     {
         return Random.Range(0.85f, 1.0f);
     }
 
-    public static float GetAttackAttribute(AttackData attackData_, CombatParticipantData attacker_)
+    private static float GetAttackAttribute(AttackData attackData_, CombatParticipantData attacker_)
     {
         CombatStat[] attackAttributes = attackData_.primaryAttribute;
 
@@ -46,7 +55,7 @@ public static class DamageCalculator
 
     }
 
-    public static float GetDefendAttribute(AttackData attackData_, CombatParticipantData defender_)
+    private static float GetDefendAttribute(AttackData attackData_, CombatParticipantData defender_)
     {
         /*
          * Get defending stat
@@ -65,14 +74,14 @@ public static class DamageCalculator
         return defendAttributeValue;
     }
 
-    public static float GetFinalAttackStat(float attackAttributeValue, CombatParticipantData attacker_)
+    private static float GetFinalAttackStat(float attackAttributeValue, CombatParticipantData attacker_)
     {
         float attackingStat = attackAttributeValue * (1f + attacker_.equipmentData.equippedWeapon.weaponStrength / 100f);
         return attackingStat;
 
     }
 
-    public static float GetFinalDefenceStat(float defendAttributeValue, CombatParticipantData defender_)
+    private static float GetFinalDefenceStat(float defendAttributeValue, CombatParticipantData defender_)
     {
         float armorRating = 0f;
         foreach (KeyValuePair<ArmorSlot, ArmorData> kvp in defender_.equipmentData.equippedArmor)
@@ -88,7 +97,7 @@ public static class DamageCalculator
 
     }
 
-    public static float GetWeaknesses(AttackData attackData_, CombatParticipantData defender_)
+    private static float GetWeaknesses(AttackData attackData_, CombatParticipantData defender_)
     {
         float result = 1.0f;
         foreach(DamageType damageType in defender_.typeWeaknesses)
@@ -110,7 +119,7 @@ public static class DamageCalculator
         return result;
     }
 
-    public static float GetResistances(AttackData attackData_, CombatParticipantData defender_)
+    private static float GetResistances(AttackData attackData_, CombatParticipantData defender_)
     {
         float result = 1.0f;
         foreach (DamageType damageType in defender_.typeResistances)
@@ -132,6 +141,47 @@ public static class DamageCalculator
         return result;
     }
 
+    private static float GetHitRate(CombatParticipantData attacker_)
+    {
+        float result = 175f + attacker_.level + attacker_.stats.statLibrary[CombatStat.DEX] + (attacker_.stats.statLibrary[CombatStat.LUK] / 3f);
+        return result;
+    }
+
+    private static float GetDodgeRate(CombatParticipantData defender_)
+    {
+        float result = 100f + defender_.level + defender_.stats.statLibrary[CombatStat.AGI] + (defender_.stats.statLibrary[CombatStat.LUK] / 5f);
+        return result;
+    }
+
+    private static bool CheckHit(float hitRate, float dodgeRate)
+    {
+        bool result = false;
+       // Debug.Log("Hit Rate: " + hitRate);
+       // Debug.Log("Dodge Rate: " + dodgeRate);
+
+        float hitChance = (hitRate - dodgeRate)/100f;
+        float rng = Random.Range(0f, 1f);
+        if(rng <= hitChance)
+        {
+            return true;
+        }
+        return result;
+
+    }
     
+    public static bool CheckCrit(CombatParticipantData attacker_)
+    {
+        bool result = false;
+        float luck = attacker_.stats.statLibrary[CombatStat.LUK];
+        float K = 50f;
+        float critRate = (50f * (luck / (luck + K)) * ((100f + K) / 100f))/100f;
+
+        float rng = Random.Range(0f, 1f);
+        if (rng <= critRate)
+        {
+            result = true;
+        }
+        return result;
+    }
 
 }

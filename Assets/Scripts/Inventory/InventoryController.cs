@@ -128,5 +128,5 @@ public class InventoryItemData
             this.uid = uid;
             this.qty = qty;
         }
-        }
+    }
 
