@@ -15795,7 +15795,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 0
-  orthographic size: 6.28125
+  orthographic size: 9.770045
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -17486,7 +17486,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &952941639
 MonoBehaviour:
   m_ObjectHideFlags: 0
