@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,10 +8,10 @@ public class InventoryController : MonoBehaviour
     [SerializeField] private ItemDatabaseSO itemDatabase;
     private Dictionary<int, ItemSO> itemDictionary = new();
 
-    private Dictionary<int, int> consumableCompartment = new();
-    private Dictionary<int, int> weaponCompartment = new();
-    private Dictionary<int, int> armorCompartment = new();
-    private Dictionary<int, int> questCompartment = new();
+    private Dictionary<int, InventoryItemData> consumableCompartment = new();
+    private Dictionary<int, InventoryItemData> weaponCompartment = new();
+    private Dictionary<int, InventoryItemData> armorCompartment = new();
+    private Dictionary<int, InventoryItemData> questCompartment = new();
 
 
     public List<InventoryItemData> weaponCompartmentList = new();
@@ -18,14 +19,19 @@ public class InventoryController : MonoBehaviour
     public List<InventoryItemData> consumableCompartmentList = new();
     public List<InventoryItemData> questCompartmentList = new();
 
+    public static InventoryController Instance;
 
-
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
     private void Start()
     {
         InitializeDatabase();
-    
-
 
     }
 
@@ -40,23 +46,23 @@ public class InventoryController : MonoBehaviour
 
     public void AddItem(int uid)
     {
-        Dictionary<int, int> targetDictionary = GetTargetInventory(uid);
+        Dictionary<int, InventoryItemData> targetDictionary = GetTargetInventory(uid);
 
-        if (!targetDictionary.TryAdd(uid, 1))
+        if (!targetDictionary.TryAdd(uid, new InventoryItemData(GetItemData(uid))))
         {
-            targetDictionary[uid] += 1;
+            targetDictionary[uid].qty += 1;
         }
         UpdateListFromDictionary(targetDictionary);
     }
 
     public void RemoveItem(int uid)
     {
-        Dictionary<int, int> targetDictionary = GetTargetInventory(uid);
+        Dictionary<int, InventoryItemData> targetDictionary = GetTargetInventory(uid);
 
         if (targetDictionary.ContainsKey(uid))
         {
-            targetDictionary[uid] -= 1;
-            if (targetDictionary[uid] <= 0)
+            targetDictionary[uid].qty -= 1;
+            if (targetDictionary[uid].qty <= 0)
             {
                 targetDictionary.Remove(uid);
             }
@@ -64,7 +70,7 @@ public class InventoryController : MonoBehaviour
         UpdateListFromDictionary(targetDictionary);
     }
 
-    public List<InventoryItemData> GetInventoryList(Dictionary<int, int> targetDictionary)
+    public List<InventoryItemData> GetInventoryList(Dictionary<int, InventoryItemData> targetDictionary)
     {
         List<InventoryItemData> inventoryList = consumableCompartmentList;
         if (targetDictionary == weaponCompartment) inventoryList = weaponCompartmentList;
@@ -74,9 +80,9 @@ public class InventoryController : MonoBehaviour
         return inventoryList;
     }
 
-    public Dictionary<int, int> GetTargetInventory(int uid)
+    public Dictionary<int, InventoryItemData> GetTargetInventory(int uid)
     {
-        Dictionary<int, int> targetDictionary = consumableCompartment;
+        Dictionary<int, InventoryItemData> targetDictionary = consumableCompartment;
 
         ItemSO targetItem = itemDictionary[uid];
 
@@ -97,13 +103,13 @@ public class InventoryController : MonoBehaviour
 
         return targetDictionary;
     }
-    private void UpdateListFromDictionary(Dictionary<int, int> targetInventory)
+    private void UpdateListFromDictionary(Dictionary<int, InventoryItemData> targetInventory)
     {
         List<InventoryItemData> listToUpdate = GetInventoryList(targetInventory);
         listToUpdate.Clear();
-        foreach (KeyValuePair<int, int> kvp in targetInventory)
+        foreach (KeyValuePair<int, InventoryItemData> kvp in targetInventory)
         {
-            listToUpdate.Add(new InventoryItemData(kvp.Key, kvp.Value));
+            listToUpdate.Add(kvp.Value);
         }
     }
 
@@ -122,11 +128,15 @@ public class InventoryItemData
 {
     public int uid;
     public int qty;
-
-    public InventoryItemData(int uid, int qty)
+    public string itemName;
+    public string itemDescription;
+    public InventoryItemData(ItemSO config_)
         {
-            this.uid = uid;
-            this.qty = qty;
+        uid = config_.uID;
+        qty = 1;
+        itemName = config_.itemName;
+        itemDescription = config_.itemDescription;
         }
+
     }
 
