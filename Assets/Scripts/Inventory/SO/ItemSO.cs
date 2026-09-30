@@ -6,5 +6,4 @@ public abstract class ItemSO : ScriptableObject
     public string itemName;
     public string itemDescription;
 
-    public abstract InventoryItemData CreateRuntimeData();
 }

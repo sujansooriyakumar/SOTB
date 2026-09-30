@@ -16,8 +16,9 @@ public class InventoryItemButton : MonoBehaviour, ISelectHandler, IDeselectHandl
 
     public void InitializeButton(InventoryItemData item)
     {
+        ItemSO reference = InventoryController.Instance.GetItemData(item.uid);
         itemRef = item;
-        itemName.text = item.itemName;
+        itemName.text = reference.itemName;
         itemQuantity.text = "x" + item.qty.ToString();
     }
 

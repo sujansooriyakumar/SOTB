@@ -5,8 +5,5 @@ public class QuestItemSO : ItemSO
 {
     public QuestSO questReference;
 
-    public override InventoryItemData CreateRuntimeData()
-    {
-        return new QuestItemData(this);
-    }
+
 }

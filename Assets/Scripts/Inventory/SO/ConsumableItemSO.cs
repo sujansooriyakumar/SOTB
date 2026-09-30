@@ -1,10 +1,17 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ConsumableItemSO", menuName = "SOTB/Inventory/ConsumableItemSO")]
 public class ConsumableItemSO : SellableItemSO
 {
-    public override InventoryItemData CreateRuntimeData()
+    public List<EffectSO> effects;
+
+    public void UseItem(CombatParticipantData[] targets)
     {
-        return new ConsumableItemData(this);
+        foreach(EffectSO effect in effects)
+        {
+            effect.ExecuteEffect(targets);
+        }
     }
 }

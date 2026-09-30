@@ -19,11 +19,12 @@ public class InventoryContextMenu : MonoBehaviour
     public event Action OnMenuClose;
     public void InitializeContextMenu(InventoryItemData itemData_)
     {
-        var (canUse, canEquip, canToss) = itemData_ switch
+        ItemSO item = InventoryController.Instance.GetItemData(itemData_.uid);
+        var (canUse, canEquip, canToss) = item switch
         {
-            ConsumableItemData => (true, false, true),
-            WeaponItemData or ArmorItemData => (false, true, true),
-            QuestItemData => (false, false, false),
+            ConsumableItemSO => (true, false, true),
+            WeaponItemSO or ArmorItemSO => (false, true, true),
+            QuestItemSO => (false, false, false),
             _ => (false, false, false) 
         };
 

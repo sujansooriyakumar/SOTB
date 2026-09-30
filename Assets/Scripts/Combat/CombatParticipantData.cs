@@ -41,12 +41,12 @@ public class CombatParticipantData
         {
             if (kvp.Value != null)
             {
-                equipmentData.EquipArmor(kvp.Value);
+                equipmentData.EquipArmor(kvp.Value.uID);
             }
         }
         if (config.equippedWeapon != null)
         {
-            equipmentData.EquipWeapon(config.equippedWeapon);
+            equipmentData.EquipWeapon(config.equippedWeapon.uID);
         }
 
         attributeResistances = config.attributeResistances;

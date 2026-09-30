@@ -82,7 +82,7 @@ public class InventoryUIController : MonoBehaviour
 
     public void UpdateItemDescription(InventoryItemData itemData)
     {
-        itemDescription.text = itemData.itemDescription;
+        itemDescription.text = InventoryController.Instance.GetItemData(itemData.uid).itemDescription;
     }
     private void OpenContextMenu(GameObject button_)
     {

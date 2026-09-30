@@ -9,10 +9,7 @@ public class WeaponItemSO : SellableItemSO
     public int weaponStrength;
     public CombatStat[] damageStat;
 
-    public override InventoryItemData CreateRuntimeData()
-    {
-        return new WeaponItemData(this);
-    }
+
 
     
 }

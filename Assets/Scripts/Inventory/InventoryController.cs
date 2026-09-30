@@ -9,12 +9,12 @@ public class InventoryController : MonoBehaviour
     private Dictionary<int, ItemSO> itemDictionary = new();
 
 
-    private Dictionary<int, InventoryItemData> inventory = new();
+    private Dictionary<int, int> inventory = new();
 
-    public List<WeaponItemData> weaponCompartmentList = new();
-    public List<ArmorItemData> armorCompartmentList = new();
-    public List<ConsumableItemData> consumableCompartmentList = new();
-    public List<QuestItemData> questCompartmentList = new();
+    public List<InventoryItemData> weaponCompartmentList = new();
+    public List<InventoryItemData> armorCompartmentList = new();
+    public List<InventoryItemData> consumableCompartmentList = new();
+    public List<InventoryItemData> questCompartmentList = new();
 
     public static InventoryController Instance;
 
@@ -47,9 +47,9 @@ public class InventoryController : MonoBehaviour
     {
        // Dictionary<int, InventoryItemData> targetDictionary = GetTargetInventory(uid);
 
-        if (!inventory.TryAdd(uid, GetItemData(uid).CreateRuntimeData()))
+        if (!inventory.TryAdd(uid, 1))
         {
-            inventory[uid].qty += 1;
+            inventory[uid] += 1;
         }
         UpdateListFromDictionary();
     }
@@ -60,8 +60,8 @@ public class InventoryController : MonoBehaviour
 
         if (inventory.ContainsKey(uid))
         {
-            inventory[uid].qty -= 1;
-            if (inventory[uid].qty <= 0)
+            inventory[uid] -= 1;
+            if (inventory[uid] <= 0)
             {
                 inventory.Remove(uid);
             }
@@ -78,26 +78,26 @@ public class InventoryController : MonoBehaviour
         armorCompartmentList.Clear();
         consumableCompartmentList.Clear();
         questCompartmentList.Clear();
-        foreach (KeyValuePair<int, InventoryItemData> kvp in inventory)
+        foreach (KeyValuePair<int, int> kvp in inventory)
         {
-            if(kvp.Value is ConsumableItemData consumable)
+            if(GetItemData(kvp.Value) is ConsumableItemSO consumable)
             {
-                consumableCompartmentList.Add(consumable);
+                consumableCompartmentList.Add(new InventoryItemData(kvp));
             }
 
-            if(kvp.Value is WeaponItemData weapon)
+            if(GetItemData(kvp.Value) is WeaponItemSO weapon)
             {
-                weaponCompartmentList.Add(weapon);
+                weaponCompartmentList.Add(new InventoryItemData(kvp));
             }
 
-            if(kvp.Value is ArmorItemData armor)
+            if(GetItemData(kvp.Value) is ArmorItemSO armor)
             {
-                armorCompartmentList.Add(armor);
+                armorCompartmentList.Add(new InventoryItemData(kvp));
             }
 
-            if(kvp.Value is QuestItemData quest)
+            if(GetItemData(kvp.Value) is QuestItemSO quest)
             {
-                questCompartmentList.Add(quest);
+                questCompartmentList.Add(new InventoryItemData(kvp));
             }
         }
     }

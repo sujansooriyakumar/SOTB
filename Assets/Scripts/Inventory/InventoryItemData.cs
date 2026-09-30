@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -6,15 +7,13 @@ public class InventoryItemData
 {
     public int uid;
     public int qty;
-    public string itemName;
-    public string itemDescription;
-    public InventoryItemData(ItemSO config_)
+
+    public InventoryItemData(KeyValuePair<int, int> kvp)
     {
-        uid = config_.uID;
-        qty = 1;
-        itemName = config_.itemName;
-        itemDescription = config_.itemDescription;
+        uid = kvp.Key;
+        qty = kvp.Value;
     }
+    
 
 }
 

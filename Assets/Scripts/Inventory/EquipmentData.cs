@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EquipmentData
 {
-    public WeaponData equippedWeapon;
-    public Dictionary<ArmorSlot, ArmorData> equippedArmor = new();
+    public WeaponItemSO equippedWeapon;
+    public Dictionary<ArmorSlot, ArmorItemSO> equippedArmor = new();
 
     public EquipmentData()
     {
@@ -18,43 +18,18 @@ public class EquipmentData
         equippedWeapon = null;
     }
 
-    public void EquipWeapon(WeaponItemSO weaponToEquip)
+    public void EquipWeapon(int weaponToEquip)
     {
-        equippedWeapon = new WeaponData(weaponToEquip);
+        equippedWeapon = InventoryController.Instance.GetItemData(weaponToEquip) as WeaponItemSO;
     }
 
-    public void EquipArmor(ArmorItemSO armorToEquip)
+    public void EquipArmor(int armorToEquip)
     {
-        equippedArmor[armorToEquip.armorSlot] = new ArmorData(armorToEquip);
-    }
-}
-
-public class WeaponData
-{
-    public string itemName;
-    public int weaponStrength;
-    public DamageAttribute damageAttribute;
-    public DamageType damageType;
-
-    public WeaponData(WeaponItemSO config)
-    {
-        itemName = config.itemName;
-        weaponStrength = config.weaponStrength;
-        damageType = config.weaponClass.damageType;
-        damageAttribute = config.damageAttribute;
+        ArmorItemSO armor = InventoryController.Instance.GetItemData(armorToEquip) as ArmorItemSO;
+        equippedArmor[armor.armorSlot] = armor;
     }
 }
 
-public class ArmorData
-{
-    public string itemName;
-    public int armorRating;
-    public ArmorSlot armorSlot;
-    public ArmorData(ArmorItemSO config)
-    {
-        itemName = config.itemName;
-        armorRating = config.armorRating;
-        armorSlot = config.armorSlot;
-    }
-}
+
+
 

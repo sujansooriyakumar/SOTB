@@ -31,6 +31,17 @@ public static class DamageCalculator
         return damage * resistances * weaknesses * damageRoll * critMultiplier;
     }
 
+    public static float CalculateItemDamage(CombatParticipantData defender_, float strength, DamageAttribute damageAttribute, DamageType damageType)
+    {
+        float damage = 0f;
+        AttackData attackData = new AttackData();
+        attackData.damageAttribute = damageAttribute;
+        attackData.damageType = damageType;
+        float effectiveness = GetResistances(attackData, defender_);
+        damage = strength * effectiveness;
+        return damage;
+    }
+
     private static float GetDamageRoll()
     {
         return Random.Range(0.85f, 1.0f);
@@ -84,10 +95,11 @@ public static class DamageCalculator
     private static float GetFinalDefenceStat(float defendAttributeValue, CombatParticipantData defender_)
     {
         float armorRating = 0f;
-        foreach (KeyValuePair<ArmorSlot, ArmorData> kvp in defender_.equipmentData.equippedArmor)
+        foreach (KeyValuePair<ArmorSlot, ArmorItemSO> kvp in defender_.equipmentData.equippedArmor)
         {
             if (kvp.Value != null)
             {
+                
                 armorRating += kvp.Value.armorRating;
             }
         }
