@@ -18,7 +18,7 @@ public class InventoryItemButton : MonoBehaviour, ISelectHandler, IDeselectHandl
     {
         itemRef = item;
         itemName.text = item.itemName;
-        itemQuantity.text = item.qty.ToString();
+        itemQuantity.text = "x" + item.qty.ToString();
     }
 
     public void OnDeselect(BaseEventData eventData)

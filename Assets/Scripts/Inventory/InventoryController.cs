@@ -8,16 +8,13 @@ public class InventoryController : MonoBehaviour
     [SerializeField] private ItemDatabaseSO itemDatabase;
     private Dictionary<int, ItemSO> itemDictionary = new();
 
-    private Dictionary<int, InventoryItemData> consumableCompartment = new();
-    private Dictionary<int, InventoryItemData> weaponCompartment = new();
-    private Dictionary<int, InventoryItemData> armorCompartment = new();
-    private Dictionary<int, InventoryItemData> questCompartment = new();
 
+    private Dictionary<int, InventoryItemData> inventory = new();
 
-    public List<InventoryItemData> weaponCompartmentList = new();
-    public List<InventoryItemData> armorCompartmentList = new();
-    public List<InventoryItemData> consumableCompartmentList = new();
-    public List<InventoryItemData> questCompartmentList = new();
+    public List<WeaponItemData> weaponCompartmentList = new();
+    public List<ArmorItemData> armorCompartmentList = new();
+    public List<ConsumableItemData> consumableCompartmentList = new();
+    public List<QuestItemData> questCompartmentList = new();
 
     public static InventoryController Instance;
 
@@ -32,6 +29,7 @@ public class InventoryController : MonoBehaviour
     private void Start()
     {
         InitializeDatabase();
+        AddItem(0);
 
     }
 
@@ -46,70 +44,60 @@ public class InventoryController : MonoBehaviour
 
     public void AddItem(int uid)
     {
-        Dictionary<int, InventoryItemData> targetDictionary = GetTargetInventory(uid);
+       // Dictionary<int, InventoryItemData> targetDictionary = GetTargetInventory(uid);
 
-        if (!targetDictionary.TryAdd(uid, new InventoryItemData(GetItemData(uid))))
+        if (!inventory.TryAdd(uid, GetItemData(uid).CreateRuntimeData()))
         {
-            targetDictionary[uid].qty += 1;
+            inventory[uid].qty += 1;
         }
-        UpdateListFromDictionary(targetDictionary);
+        UpdateListFromDictionary();
     }
 
     public void RemoveItem(int uid)
     {
-        Dictionary<int, InventoryItemData> targetDictionary = GetTargetInventory(uid);
+       // Dictionary<int, InventoryItemData> targetDictionary = GetTargetInventory(uid);
 
-        if (targetDictionary.ContainsKey(uid))
+        if (inventory.ContainsKey(uid))
         {
-            targetDictionary[uid].qty -= 1;
-            if (targetDictionary[uid].qty <= 0)
+            inventory[uid].qty -= 1;
+            if (inventory[uid].qty <= 0)
             {
-                targetDictionary.Remove(uid);
+                inventory.Remove(uid);
             }
         }
-        UpdateListFromDictionary(targetDictionary);
+        UpdateListFromDictionary();
     }
 
-    public List<InventoryItemData> GetInventoryList(Dictionary<int, InventoryItemData> targetDictionary)
+
+
+    
+    private void UpdateListFromDictionary()
     {
-        List<InventoryItemData> inventoryList = consumableCompartmentList;
-        if (targetDictionary == weaponCompartment) inventoryList = weaponCompartmentList;
-        if(targetDictionary == armorCompartment) inventoryList = armorCompartmentList;
-        if(targetDictionary == questCompartment) inventoryList = questCompartmentList;
-
-        return inventoryList;
-    }
-
-    public Dictionary<int, InventoryItemData> GetTargetInventory(int uid)
-    {
-        Dictionary<int, InventoryItemData> targetDictionary = consumableCompartment;
-
-        ItemSO targetItem = itemDictionary[uid];
-
-        if (targetItem is WeaponItemSO weaponItem)
+        weaponCompartmentList.Clear();
+        armorCompartmentList.Clear();
+        consumableCompartmentList.Clear();
+        questCompartmentList.Clear();
+        foreach (KeyValuePair<int, InventoryItemData> kvp in inventory)
         {
-            targetDictionary = weaponCompartment;
-        }
+            if(kvp.Value is ConsumableItemData consumable)
+            {
+                consumableCompartmentList.Add(consumable);
+            }
 
-        if (targetItem is ArmorItemSO armorItem)
-        {
-            targetDictionary = armorCompartment;
-        }
+            if(kvp.Value is WeaponItemData weapon)
+            {
+                weaponCompartmentList.Add(weapon);
+            }
 
-        if (targetItem is QuestItemSO questItem)
-        {
-            targetDictionary = questCompartment;
-        }
+            if(kvp.Value is ArmorItemData armor)
+            {
+                armorCompartmentList.Add(armor);
+            }
 
-        return targetDictionary;
-    }
-    private void UpdateListFromDictionary(Dictionary<int, InventoryItemData> targetInventory)
-    {
-        List<InventoryItemData> listToUpdate = GetInventoryList(targetInventory);
-        listToUpdate.Clear();
-        foreach (KeyValuePair<int, InventoryItemData> kvp in targetInventory)
-        {
-            listToUpdate.Add(kvp.Value);
+            if(kvp.Value is QuestItemData quest)
+            {
+                questCompartmentList.Add(quest);
+            }
         }
     }
 
@@ -122,21 +110,4 @@ public class InventoryController : MonoBehaviour
         inventoryCompartment[fromIndex] = toItem;
     }
 }
-
-[Serializable]
-public class InventoryItemData
-{
-    public int uid;
-    public int qty;
-    public string itemName;
-    public string itemDescription;
-    public InventoryItemData(ItemSO config_)
-        {
-        uid = config_.uID;
-        qty = 1;
-        itemName = config_.itemName;
-        itemDescription = config_.itemDescription;
-        }
-
-    }
 

@@ -17377,8 +17377,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.957901, y: 0.00010681152}
-  m_SizeDelta: {x: 466.2939, y: 243.4941}
+  m_AnchoredPosition: {x: -3.0815, y: 0.00010681152}
+  m_SizeDelta: {x: 221.4843, y: 243.4941}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &405646479
 MonoBehaviour:
@@ -17406,7 +17406,7 @@ MonoBehaviour:
     fermentum purus imperdiet mattis. Praesent viverra mattis felis a dictum. Suspendisse
     potenti. Sed nec libero sit amet.
 
-    
+
 
 '
   m_isRightToLeft: 0
@@ -17435,8 +17435,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22.6
-  m_fontSizeBase: 22.6
+  m_fontSize: 15.7
+  m_fontSizeBase: 15.7
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -19299,23 +19299,34 @@ MonoBehaviour:
   weaponCompartmentList:
   - uid: 0
     qty: 1
-    itemName: buster sword
-    itemDescription: clouds sword
+    itemName: Blade of Luvidia
+    itemDescription: A blade blessed with the power of Luvidia, Goddess of Kindness.
+    sellPrice: 0
+    weaponClass: {fileID: 0}
+    damageAttribute: 0
+    weaponStrength: 0
+    damageStat: 
   armorCompartmentList:
   - uid: 0
     qty: 1
-    itemName: dragon armor
-    itemDescription: dragon zord
+    itemName: Luvidia's Shield
+    itemDescription: A shield blessed with the power of Luvidia, Goddess of Kindness.
+    sellPrice: 0
+    armorRating: 0
+    armorSlot: 0
   consumableCompartmentList:
   - uid: 0
     qty: 1
-    itemName: red potion
-    itemDescription: heals 20 hp
+    itemName: Minor Health Potion
+    itemDescription: Heals 20HP to a single party member.
+    sellPrice: 0
   questCompartmentList:
   - uid: 0
     qty: 1
-    itemName: kings sceptre
-    itemDescription: king pacs sceptre
+    itemName: King Pac's Sceptre
+    itemDescription: 'The sceptre that King Pac requested us to retrieve. We should
+      return it. '
+    questReference: {fileID: 0}
 --- !u!4 &607712422
 Transform:
   m_ObjectHideFlags: 0
@@ -21238,8 +21249,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 104, y: -387.74}
-  m_SizeDelta: {x: -540.0144, y: -775.4859}
+  m_AnchoredPosition: {x: 194.66278, y: -387.74}
+  m_SizeDelta: {x: -784.2679, y: -775.4859}
   m_Pivot: {x: 0.70902056, y: 0.9999999}
 --- !u!114 &901470351
 MonoBehaviour:
@@ -24802,8 +24813,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -259, y: -53.095917}
-  m_SizeDelta: {x: 356.8511, y: 882.4676}
+  m_AnchoredPosition: {x: -113.26453, y: -53.095917}
+  m_SizeDelta: {x: 648.322, y: 882.4676}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1410915185
 MonoBehaviour:

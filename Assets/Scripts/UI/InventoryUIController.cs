@@ -12,7 +12,7 @@ public class InventoryUIController : MonoBehaviour
     public GameObject buttonPrefab;
     private List<Button> activeButtons = new();
     public static InventoryUIController instance;
-    private List<InventoryItemData> activeCompartment;
+    private IReadOnlyList<InventoryItemData> activeCompartment;
 
     public InventoryCompartmentController inventoryCompartmentController;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -62,8 +62,9 @@ public class InventoryUIController : MonoBehaviour
         activeButtons.Clear();
     }
 
-    public void PopulateInventory(List<InventoryItemData> data)
+    public void PopulateInventory(IReadOnlyList<InventoryItemData> data)
     {
+        if (data.Count == 0) return;
         foreach (InventoryItemData item in data)
         {
             GameObject button = Instantiate(buttonPrefab, inventoryButtonParent);
