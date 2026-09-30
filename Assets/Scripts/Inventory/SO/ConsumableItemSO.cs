@@ -6,6 +6,8 @@ using UnityEngine;
 public class ConsumableItemSO : SellableItemSO
 {
     public List<EffectSO> effects;
+    public bool usableInBattle;
+    public bool usableOutOfBattle;
 
     public void UseItem(CombatParticipantData[] targets)
     {

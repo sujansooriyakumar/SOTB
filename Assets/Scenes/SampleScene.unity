@@ -18422,7 +18422,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 0
-  orthographic size: 5.625
+  orthographic size: 9.770045
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -19647,34 +19647,15 @@ MonoBehaviour:
   weaponCompartmentList:
   - uid: 0
     qty: 1
-    itemName: Blade of Luvidia
-    itemDescription: A blade blessed with the power of Luvidia, Goddess of Kindness.
-    sellPrice: 0
-    weaponClass: {fileID: 0}
-    damageAttribute: 0
-    weaponStrength: 0
-    damageStat: 
   armorCompartmentList:
   - uid: 0
     qty: 1
-    itemName: Luvidia's Shield
-    itemDescription: A shield blessed with the power of Luvidia, Goddess of Kindness.
-    sellPrice: 0
-    armorRating: 0
-    armorSlot: 0
   consumableCompartmentList:
   - uid: 0
     qty: 1
-    itemName: Minor Health Potion
-    itemDescription: Heals 20HP to a single party member.
-    sellPrice: 0
   questCompartmentList:
   - uid: 0
     qty: 1
-    itemName: King Pac's Sceptre
-    itemDescription: 'The sceptre that King Pac requested us to retrieve. We should
-      return it. '
-    questReference: {fileID: 0}
 --- !u!4 &607712422
 Transform:
   m_ObjectHideFlags: 0
