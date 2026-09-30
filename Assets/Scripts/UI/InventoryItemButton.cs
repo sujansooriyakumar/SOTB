@@ -32,4 +32,9 @@ public class InventoryItemButton : MonoBehaviour, ISelectHandler, IDeselectHandl
         OnSelected?.Invoke(itemRef);
 
     }
+
+    public InventoryItemData GetItemData()
+    {
+        return itemRef;
+    }
 }

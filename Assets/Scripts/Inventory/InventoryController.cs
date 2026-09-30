@@ -30,6 +30,7 @@ public class InventoryController : MonoBehaviour
     {
         InitializeDatabase();
         AddItem(0);
+        AddItem(42);
 
     }
 

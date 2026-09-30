@@ -3,19 +3,26 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InventoryUIController : MonoBehaviour
 {
+    [Header("Button Spawning")]
     public Transform inventoryButtonParent;
     public TMP_Text itemDescription;
     public GameObject buttonPrefab;
     private List<Button> activeButtons = new();
-    public static InventoryUIController instance;
+
+    [Header("Compartment Control")]
+    public InventoryCompartmentController inventoryCompartmentController;
     private IReadOnlyList<InventoryItemData> activeCompartment;
 
-    public InventoryCompartmentController inventoryCompartmentController;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [Header("Context Menu")]
+    [SerializeField] private GameObject contextMenu;
+    private GameObject previousSelected; // ref store for returning to menu
+
+    public static InventoryUIController instance;
 
     private void Awake()
     {
@@ -24,10 +31,6 @@ public class InventoryUIController : MonoBehaviour
             instance = new InventoryUIController();
         }
         inventoryCompartmentController.OnCompartmentChanged += LoadInventory;
-    }
-    void Start()
-    {
-    
     }
 
     public void LoadInventory(int index)
@@ -71,6 +74,7 @@ public class InventoryUIController : MonoBehaviour
             InventoryItemButton buttonData = button.GetComponent<InventoryItemButton>();
             buttonData.InitializeButton(item);
             buttonData.OnSelected += UpdateItemDescription;
+            button.GetComponent<Button>().onClick.AddListener(() => OpenContextMenu(button));
             activeButtons.Add(button.GetComponent<Button>());
         }
         activeButtons[0].Select();
@@ -79,6 +83,35 @@ public class InventoryUIController : MonoBehaviour
     public void UpdateItemDescription(InventoryItemData itemData)
     {
         itemDescription.text = itemData.itemDescription;
+    }
+    private void OpenContextMenu(GameObject button_)
+    {
+        inventoryCompartmentController.enabled = false;
+        previousSelected = EventSystem.current.currentSelectedGameObject;
+        previousSelected.GetComponent<InventoryItemButton>().enabled = false;
+        contextMenu.SetActive(true);
+        contextMenu.GetComponent<InventoryContextMenu>().OnMenuClose += ReturnToMenu;
+        contextMenu.GetComponent<InventoryContextMenu>().InitializeContextMenu(button_.GetComponent<InventoryItemButton>().GetItemData());
+        SetInventoryButtonStatus(false);
+    }
+
+    private void ReturnToMenu()
+    {
+        inventoryCompartmentController.enabled = true;
+        previousSelected.GetComponent<InventoryItemButton>().enabled = true;
+        EventSystem.current.SetSelectedGameObject(previousSelected);
+        contextMenu.GetComponent<InventoryContextMenu>().OnMenuClose -= ReturnToMenu;
+        contextMenu.SetActive(false);
+        SetInventoryButtonStatus(true);
+
+    }
+
+    private void SetInventoryButtonStatus(bool status)
+    {
+        foreach(Button button in activeButtons)
+        {
+            button.interactable = status;
+        }
     }
     
 }
