@@ -1,12 +1,10 @@
-using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InventoryUIController : MonoBehaviour
+public class UIInventoryMenu : UIMenu
 {
     [Header("Button Spawning")]
     public Transform inventoryButtonParent;
@@ -22,16 +20,17 @@ public class InventoryUIController : MonoBehaviour
     [SerializeField] private GameObject contextMenu;
     private GameObject previousSelected; // ref store for returning to menu
 
-    public static InventoryUIController instance;
-
-    private void Awake()
+    public override void ActivateMenu()
     {
-        if(instance == null)
-        {
-            instance = new InventoryUIController();
-        }
+        inventoryCompartmentController.SetActiveCompartment(0);
         inventoryCompartmentController.OnCompartmentChanged += LoadInventory;
     }
+    public override void DeactivateMenu()
+    {
+        inventoryCompartmentController.OnCompartmentChanged -= LoadInventory;
+
+    }
+
 
     public void LoadInventory(int index)
     {
@@ -94,7 +93,6 @@ public class InventoryUIController : MonoBehaviour
         contextMenu.GetComponent<InventoryContextMenu>().InitializeContextMenu(button_.GetComponent<InventoryItemButton>().GetItemData());
         SetInventoryButtonStatus(false);
     }
-
     private void ReturnToMenu()
     {
         inventoryCompartmentController.enabled = true;
@@ -105,13 +103,13 @@ public class InventoryUIController : MonoBehaviour
         SetInventoryButtonStatus(true);
 
     }
-
     private void SetInventoryButtonStatus(bool status)
     {
-        foreach(Button button in activeButtons)
+        foreach (Button button in activeButtons)
         {
             button.interactable = status;
         }
     }
-    
+
+  
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class CombatParticipantData
 {
     public string characterName;
+    public int characterID;
     public int maxHP;
     public int currentHP;
     public int maxSP;
@@ -26,7 +27,8 @@ public class CombatParticipantData
 
     public CombatParticipantData(CombatParticipantSO config)
     {
-        characterName = config.characterName;
+        characterName = config.character.characterName;
+        characterID = config.character.characterID;
         maxHP = config.maxHP;
         maxSP = config.maxSP;
         level = config.level;
@@ -37,13 +39,12 @@ public class CombatParticipantData
         currentSP = maxSP;
 
         equipmentData = new EquipmentData();
-        foreach (KeyValuePair<ArmorSlot, ArmorItemSO> kvp in config.equippedArmor)
-        {
-            if (kvp.Value != null)
-            {
-                equipmentData.EquipArmor(kvp.Value.uID);
-            }
-        }
+        if (config.equippedArmor_accessory != null) equipmentData.EquipArmor(config.equippedArmor_accessory.uID);
+        if (config.equippedArmor_chest != null) equipmentData.EquipArmor(config.equippedArmor_chest.uID);
+        if (config.equippedArmor_hands != null) equipmentData.EquipArmor(config.equippedArmor_hands.uID);
+        if (config.equippedArmor_helm != null) equipmentData.EquipArmor(config.equippedArmor_helm.uID);
+        if (config.equippedArmor_legs != null) equipmentData.EquipArmor(config.equippedArmor_legs.uID);
+
         if (config.equippedWeapon != null)
         {
             equipmentData.EquipWeapon(config.equippedWeapon.uID);

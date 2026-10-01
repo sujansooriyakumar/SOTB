@@ -9,12 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 746c3648f7f2b3545a2ca2328fda9f51, type: 3}
-  m_Name: ArmorItemSO
-  m_EditorClassIdentifier: Assembly-CSharp::ArmorItemSO
-  uID: 0
-  itemName: 
-  itemDescription: 
-  sellCost: 0
-  armorRating: 15
-  armorSlot: 0
+  m_Script: {fileID: 11500000, guid: 8706714363163c44282a9a9722154fd4, type: 3}
+  m_Name: Character Database
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterDatabaseSO
+  characterList: []

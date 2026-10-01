@@ -28,9 +28,9 @@ public class InventoryController : MonoBehaviour
 
     private void Start()
     {
-        InitializeDatabase();
-        AddItem(0);
-        AddItem(42);
+        //InitializeDatabase();
+        //AddItem(0);
+        //AddItem(42);
 
     }
 

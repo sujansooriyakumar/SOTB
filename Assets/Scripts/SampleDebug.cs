@@ -4,24 +4,10 @@ using UnityEngine;
 
 public class SampleDebug : SerializedMonoBehaviour
 {
-    public CombatParticipantSO attacker;
-    public int basePower;
-    public CombatStat[] primaryAttribute;
-    public DamageAttribute damageAttribute;
-    public DamageType damageType;
-
-
-    [Button]
-    public void CheckAttack()
+    
+    private void Start()
     {
-       AttackData sampleAttack = new AttackData();
-     
-        sampleAttack.primaryAttribute = primaryAttribute;
-        sampleAttack.damageType = damageType;
-        sampleAttack.damageAttribute = damageAttribute;
-        sampleAttack.basePower = basePower;
-        Debug.Log(DamageCalculator.CalculateDamage(new CombatParticipantData(attacker), new CombatParticipantData(attacker), sampleAttack));
-
-     
+        GameStateManager.ChangeGameState(GameState.OVERWORLD);
+        Debug.Log(GameStateManager.GetGameState());
     }
 }

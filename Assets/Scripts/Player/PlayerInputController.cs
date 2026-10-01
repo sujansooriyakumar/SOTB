@@ -11,6 +11,18 @@ public class PlayerInputController : MonoBehaviour
         walkAction.Enable();
         walkAction.performed += WalkInput_Performed;
         walkAction.canceled += WalkInput_Performed;
+        GameStateManager.OnStateChanged += UpdateOverworldControlState;
+    }
+
+    private void UpdateOverworldControlState(GameState gameState)
+    {
+        if(gameState != GameState.OVERWORLD)
+        {
+            walkAction.Disable();
+            return;
+        }
+
+        walkAction.Enable();
 
     }
 

@@ -41,4 +41,13 @@ public class InventoryCompartmentController : MonoBehaviour
         OnCompartmentChanged?.Invoke(currentIndex);
         compartmentObjects[currentIndex].transform.localScale = Vector3.one * selectedScale;
     }
+
+    public void SetActiveCompartment(int index)
+    {
+        compartmentObjects[currentIndex].transform.localScale = Vector3.one;
+        currentIndex = index;
+        OnCompartmentChanged?.Invoke(currentIndex);
+        compartmentObjects[currentIndex].transform.localScale = Vector3.one * selectedScale;
+
+    }
 }
