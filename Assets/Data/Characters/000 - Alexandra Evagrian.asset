@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: 000 - Alexandra Evagrian
   m_EditorClassIdentifier: Assembly-CSharp::CharacterSO
   characterID: 0
-  characterPortrait: {fileID: 0}
-  characterName: 
+  characterPortrait: {fileID: -922557514, guid: 7f31daaf51e97b043a64d7cd0b403477, type: 3}
+  characterName: Alexandra

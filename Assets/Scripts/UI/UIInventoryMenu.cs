@@ -10,11 +10,12 @@ public class UIInventoryMenu : UIMenu
     public Transform inventoryButtonParent;
     public TMP_Text itemDescription;
     public GameObject buttonPrefab;
-    private List<Button> activeButtons = new();
+   // private List<Button> activeButtons = new();
 
     [Header("Compartment Control")]
     public InventoryCompartmentController inventoryCompartmentController;
     private IReadOnlyList<InventoryItemData> activeCompartment;
+    private int compartmentIndex = -1;
 
     [Header("Context Menu")]
     [SerializeField] private GameObject contextMenu;
@@ -22,18 +23,37 @@ public class UIInventoryMenu : UIMenu
 
     public override void ActivateMenu()
     {
-        inventoryCompartmentController.SetActiveCompartment(0);
+        base.ActivateMenu();
         inventoryCompartmentController.OnCompartmentChanged += LoadInventory;
+        int initIndex = 0;
+        if (compartmentIndex > 0) initIndex = compartmentIndex;
+        inventoryCompartmentController.SetActiveCompartment(initIndex);
+        SetInventoryButtonStatus(true);
+        inventoryCompartmentController.enabled = true;
+        if(lastSelected != null) lastSelected.GetComponent<InventoryItemButton>().enabled = true;
+
+
+
     }
     public override void DeactivateMenu()
     {
+        base.DeactivateMenu();
         inventoryCompartmentController.OnCompartmentChanged -= LoadInventory;
+        SetInventoryButtonStatus(false);
 
+    }
+
+    public override void CloseMenu()
+    {
+        compartmentIndex = -1;
+        lastSelected = null;
+        base.CloseMenu();
     }
 
 
     public void LoadInventory(int index)
     {
+        if (index == compartmentIndex) return;
         switch (index)
         {
             case 0:
@@ -49,19 +69,19 @@ public class UIInventoryMenu : UIMenu
                 activeCompartment = InventoryController.Instance.questCompartmentList;
                 break;
         }
-
+        compartmentIndex = index;
         ClearItems();
         PopulateInventory(activeCompartment);
     }
 
     private void ClearItems()
     {
-        foreach (var button in activeButtons)
+        foreach (var button in buttons)
         {
             button.gameObject.GetComponent<InventoryItemButton>().OnSelected -= UpdateItemDescription;
             Destroy(button.gameObject);
         }
-        activeButtons.Clear();
+        buttons.Clear();
     }
 
     public void PopulateInventory(IReadOnlyList<InventoryItemData> data)
@@ -74,9 +94,9 @@ public class UIInventoryMenu : UIMenu
             buttonData.InitializeButton(item);
             buttonData.OnSelected += UpdateItemDescription;
             button.GetComponent<Button>().onClick.AddListener(() => OpenContextMenu(button));
-            activeButtons.Add(button.GetComponent<Button>());
+            buttons.Add(button.GetComponent<Button>());
         }
-        activeButtons[0].Select();
+        buttons[0].Select();
     }
 
     public void UpdateItemDescription(InventoryItemData itemData)
@@ -86,26 +106,18 @@ public class UIInventoryMenu : UIMenu
     private void OpenContextMenu(GameObject button_)
     {
         inventoryCompartmentController.enabled = false;
-        previousSelected = EventSystem.current.currentSelectedGameObject;
-        previousSelected.GetComponent<InventoryItemButton>().enabled = false;
-        contextMenu.SetActive(true);
-        contextMenu.GetComponent<InventoryContextMenu>().OnMenuClose += ReturnToMenu;
-        contextMenu.GetComponent<InventoryContextMenu>().InitializeContextMenu(button_.GetComponent<InventoryItemButton>().GetItemData());
+        lastSelected = EventSystem.current.currentSelectedGameObject;
+        lastSelected.GetComponent<InventoryItemButton>().enabled = false;
+        UIController.Instance.OpenMenu(2);
+       // contextMenu.SetActive(true);
+       // contextMenu.GetComponent<InventoryContextMenu>().OnMenuClose += ReturnToMenu;
+      //  contextMenu.GetComponent<InventoryContextMenu>().GetItemSelected(button_.GetComponent<InventoryItemButton>().GetItemData());
         SetInventoryButtonStatus(false);
     }
-    private void ReturnToMenu()
-    {
-        inventoryCompartmentController.enabled = true;
-        previousSelected.GetComponent<InventoryItemButton>().enabled = true;
-        EventSystem.current.SetSelectedGameObject(previousSelected);
-        contextMenu.GetComponent<InventoryContextMenu>().OnMenuClose -= ReturnToMenu;
-        contextMenu.SetActive(false);
-        SetInventoryButtonStatus(true);
-
-    }
+ 
     private void SetInventoryButtonStatus(bool status)
     {
-        foreach (Button button in activeButtons)
+        foreach (Button button in buttons)
         {
             button.interactable = status;
         }

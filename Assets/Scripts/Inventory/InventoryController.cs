@@ -28,9 +28,10 @@ public class InventoryController : MonoBehaviour
 
     private void Start()
     {
-        //InitializeDatabase();
-        //AddItem(0);
-        //AddItem(42);
+        InitializeDatabase();
+        AddItem(0);
+        AddItem(1);
+        AddItem(2);
 
     }
 
@@ -80,22 +81,22 @@ public class InventoryController : MonoBehaviour
         questCompartmentList.Clear();
         foreach (KeyValuePair<int, int> kvp in inventory)
         {
-            if(GetItemData(kvp.Value) is ConsumableItemSO consumable)
+            if(GetItemData(kvp.Key) is ConsumableItemSO consumable)
             {
                 consumableCompartmentList.Add(new InventoryItemData(kvp));
             }
 
-            if(GetItemData(kvp.Value) is WeaponItemSO weapon)
+            if(GetItemData(kvp.Key) is WeaponItemSO weapon)
             {
                 weaponCompartmentList.Add(new InventoryItemData(kvp));
             }
 
-            if(GetItemData(kvp.Value) is ArmorItemSO armor)
+            if(GetItemData(kvp.Key) is ArmorItemSO armor)
             {
                 armorCompartmentList.Add(new InventoryItemData(kvp));
             }
 
-            if(GetItemData(kvp.Value) is QuestItemSO quest)
+            if(GetItemData(kvp.Key) is QuestItemSO quest)
             {
                 questCompartmentList.Add(new InventoryItemData(kvp));
             }

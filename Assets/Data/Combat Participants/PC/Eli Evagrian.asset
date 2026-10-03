@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfb44fbd4277a9a40b56b195a44dd072, type: 3}
+  m_Name: Eli Evagrian
+  m_EditorClassIdentifier: Assembly-CSharp::CombatParticipantSO
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  character: {fileID: 11400000, guid: eae315fd0fcaa7341b616a0da760cd21, type: 2}
+  maxHP: 10
+  maxSP: 10
+  level: 1
+  STR: 12
+  DEF: 8
+  INT: 5
+  SPI: 7
+  DEX: 6
+  AGI: 7
+  LUK: 5
+  equippedWeapon: {fileID: 0}
+  equippedArmor_helm: {fileID: 0}
+  equippedArmor_chest: {fileID: 0}
+  equippedArmor_hands: {fileID: 0}
+  equippedArmor_legs: {fileID: 0}
+  equippedArmor_accessory: {fileID: 0}
+  typeWeaknesses: 
+  attributeWeaknesses: 
+  typeResistances: 
+  attributeResistances: 

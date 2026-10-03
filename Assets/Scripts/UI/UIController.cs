@@ -4,24 +4,58 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 
-public class UIController : MonoBehaviour
+public class UIController : MonoBehaviour, ICancelHandler
 {
-    public InputAction pauseAction;
-    public InputAction exitAction;
+    [SerializeField] private InputSystemUIInputModule uiInputModule;
+
     public GameObject mainMenu;
     public List<UIMenuData> menuData = new();
     private Dictionary<int, UIMenu> menuDictionary = new();
-    private UIMenu currentMenu;
-    private Queue<UIMenu> menuHistory = new();
+    [SerializeField] private UIMenu currentMenu;
+    private Stack<UIMenu> menuHistory = new();
+
+    public static UIController Instance;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
     private void OnEnable()
     {
-        pauseAction.Enable();
-        pauseAction.canceled += OnPausePressed;
-        exitAction.Enable();
-        exitAction.canceled += ExitPressed;
+        PlayerInputController.OnMenuPerformed += OpenMainMenu;
+        if (uiInputModule != null && uiInputModule.cancel != null)
+        {
+            // Subscribe to the EventSystem's global Cancel action
+            uiInputModule.cancel.action.performed += OnCancelPressed;
+        }
+
     }
 
+    private void OnDisable()
+    {
+        PlayerInputController.OnMenuPerformed -= OpenMainMenu;
+        if (uiInputModule != null && uiInputModule.cancel != null)
+        {
+            // Subscribe to the EventSystem's global Cancel action
+            uiInputModule.cancel.action.performed -= OnCancelPressed;
+        }
+
+    }
+
+    private void OpenMainMenu() { OpenMenu(0); }
+    private void OnCancelPressed(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        CloseMenu();
+    }
     private void Start()
     {
         foreach(var item in menuData)
@@ -30,34 +64,32 @@ public class UIController : MonoBehaviour
         }
     }
 
-    private void ExitPressed(InputAction.CallbackContext c)
-    {
-        CloseMenu();
-    }
+ 
     public void OpenMenu(int id)
     {
         if(currentMenu != null)
         {
-            menuHistory.Enqueue(currentMenu);
+            menuHistory.Push(currentMenu);
             currentMenu.SetLastSelected();
             currentMenu.DeactivateMenu();
-            currentMenu.gameObject.SetActive(false);
+            //currentMenu.gameObject.SetActive(false);
         }
  
         UIMenu targetMenu = menuDictionary[id];
         targetMenu.gameObject.SetActive(true);
         targetMenu.ActivateMenu();
         currentMenu = targetMenu;
+        GameStateManager.ChangeGameState(GameState.UI);
     }
 
     public void CloseMenu()
     {
         if (currentMenu == null) return;
         currentMenu.DeactivateMenu();
-        currentMenu.gameObject.SetActive(false);
+        currentMenu.CloseMenu();
         if(menuHistory.Count > 0)
         {
-            currentMenu = menuHistory.Dequeue();
+            currentMenu = menuHistory.Pop();
             currentMenu.ActivateMenu();
             currentMenu.gameObject.SetActive(true);
             EventSystem.current.SetSelectedGameObject(currentMenu.lastSelected);
@@ -67,11 +99,11 @@ public class UIController : MonoBehaviour
         GameStateManager.ChangeGameState(GameState.OVERWORLD);
     }
 
-    private void OnPausePressed(InputAction.CallbackContext c)
+
+
+    public void OnCancel(BaseEventData eventData)
     {
-        if (GameStateManager.GetGameState() != GameState.OVERWORLD) return;
-        OpenMenu(0);
-        GameStateManager.ChangeGameState(GameState.UI);
+        CloseMenu();
     }
 }
 

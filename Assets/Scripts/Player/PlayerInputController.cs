@@ -3,42 +3,62 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerInputController : MonoBehaviour
 {
-    public InputAction walkAction;
+    public InputActionAsset inputAsset;
     public static event Action<Vector2> OnWalkPerformed;
+    public static event Action OnMenuPerformed;
+    public static event Action OnInteractPerformed;
+    InputAction walkAction;
+    InputAction interactAction;
+    InputAction menuAction;
 
+   
     private void Awake()
     {
+
+         walkAction = inputAsset.FindAction("Walk");
+         interactAction = inputAsset.FindAction("Interact");
+         menuAction = inputAsset.FindAction("Menu");
+
         walkAction.Enable();
-        walkAction.performed += WalkInput_Performed;
-        walkAction.canceled += WalkInput_Performed;
+        interactAction.Enable();
+        menuAction.Enable();
+
+        interactAction.performed += InteractInput_Performed;
+        menuAction.performed += MenuInput_Performed;
         GameStateManager.OnStateChanged += UpdateOverworldControlState;
     }
 
     private void UpdateOverworldControlState(GameState gameState)
     {
-        if(gameState != GameState.OVERWORLD)
+        if (gameState != GameState.OVERWORLD)
         {
             walkAction.Disable();
+            menuAction.Disable();
+            interactAction.Disable();
             return;
         }
 
         walkAction.Enable();
-
+        menuAction.Enable();
+        interactAction.Enable();
     }
 
-    public void DisableInput()
+
+    private void OnDestroy()
     {
-        walkAction.Disable();
+        interactAction.performed -= InteractInput_Performed;
+        menuAction.performed -= MenuInput_Performed;
+        GameStateManager.OnStateChanged -= UpdateOverworldControlState;
     }
 
-    public void EnableInput()
+    public void MenuInput_Performed(InputAction.CallbackContext c)
     {
-        walkAction.Enable();
+        OnMenuPerformed?.Invoke();
     }
 
-    public void WalkInput_Performed(InputAction.CallbackContext c)
+    public void InteractInput_Performed(InputAction.CallbackContext c)
     {
-       
+        OnInteractPerformed?.Invoke();
     }
 
     private void FixedUpdate()

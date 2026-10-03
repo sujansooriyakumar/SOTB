@@ -1,13 +1,11 @@
-using NUnit.Framework.Interfaces;
-using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InventoryContextMenu : MonoBehaviour
+public class UIItemContextMenu : UIMenu
 {
+
     [SerializeField] private Button useButton;
     [SerializeField] private Button equipButton;
     [SerializeField] private Button tossButton;
@@ -16,16 +14,20 @@ public class InventoryContextMenu : MonoBehaviour
     [SerializeField] private Color disabledColor;
     [SerializeField] private Color enabledColor;
 
-    public event Action OnMenuClose;
-    public void InitializeContextMenu(InventoryItemData itemData_)
+    private ItemSO itemSelected;
+    public override void ActivateMenu()
     {
-        ItemSO item = InventoryController.Instance.GetItemData(itemData_.uid);
-        var (canUse, canEquip, canToss) = item switch
+        buttons.Add(useButton);
+        buttons.Add(equipButton);
+        buttons.Add(tossButton);
+        buttons.Add(cancelButton);
+
+        var (canUse, canEquip, canToss) = itemSelected switch
         {
             ConsumableItemSO => (true, false, true),
             WeaponItemSO or ArmorItemSO => (false, true, true),
             QuestItemSO => (false, false, false),
-            _ => (false, false, false) 
+            _ => (false, false, false)
         };
 
         SetButtonState(useButton, canUse);
@@ -43,9 +45,29 @@ public class InventoryContextMenu : MonoBehaviour
         SetUpButtonEvents();
     }
 
+    public override void DeactivateMenu()
+    {
+        useButton.onClick.RemoveAllListeners();
+        equipButton.onClick.RemoveAllListeners();
+        tossButton.onClick.RemoveAllListeners();
+        cancelButton.onClick.RemoveAllListeners();
+    }
+
+    public void GetItemSelected(InventoryItemData itemData_)
+    {
+        ItemSO itemSelected = InventoryController.Instance.GetItemData(itemData_.uid);
+
+    }
+
     private void SetUpButtonEvents()
     {
         cancelButton.onClick.AddListener(Cancel);
+    }
+
+    private void Cancel()
+    {
+
+        UIController.Instance.CloseMenu();
     }
 
     private void SetButtonState(Button button, bool state)
@@ -55,10 +77,8 @@ public class InventoryContextMenu : MonoBehaviour
         text.color = state ? enabledColor : disabledColor;
     }
 
-    private void Cancel()
-    {
-        cancelButton.onClick.RemoveAllListeners();
-        OnMenuClose?.Invoke();
-    }
-    
+
+
+
+
 }

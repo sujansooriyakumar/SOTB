@@ -21,17 +21,17 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  character: {fileID: 0}
-  maxHP: 0
-  maxSP: 0
-  level: 0
-  STR: 0
-  DEF: 0
-  INT: 0
-  SPI: 0
-  DEX: 0
-  AGI: 0
-  LUK: 0
+  character: {fileID: 11400000, guid: 868649efa3f3a90489dac87a763c772e, type: 2}
+  maxHP: 10
+  maxSP: 10
+  level: 1
+  STR: 7
+  DEF: 7
+  INT: 6
+  SPI: 6
+  DEX: 5
+  AGI: 5
+  LUK: 6
   equippedWeapon: {fileID: 0}
   equippedArmor_helm: {fileID: 0}
   equippedArmor_chest: {fileID: 0}

@@ -8,6 +8,7 @@ public static class GameStateManager
     public static void ChangeGameState(GameState newState)
     {
         currentState = newState;
+        Debug.Log(currentState);
         OnStateChanged?.Invoke(currentState);
     }
 

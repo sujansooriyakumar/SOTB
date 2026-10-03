@@ -5,6 +5,8 @@ using UnityEngine;
 public class PartyManager : MonoBehaviour
 {
     public CombatParticipantSO sample;
+    public CombatParticipantSO sample2;
+
     public List<CombatParticipantData> partyMembers = new();
     public static PartyManager Instance;
 
@@ -23,6 +25,7 @@ public class PartyManager : MonoBehaviour
     private void Start()
     {
         AddToParty(sample);
+        AddToParty(sample2);
     }
 
     public List<CombatParticipantData> GetParty() { return  partyMembers; }
