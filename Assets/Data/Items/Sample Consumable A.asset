@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Sample Consumable A
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableItemSO
   uID: 0
-  itemName: 
-  itemDescription: 
-  sellPrice: 0
+  itemName: red potion
+  itemDescription: a red potion
+  sellPrice: 10
   effects: []
   usableInBattle: 0
   usableOutOfBattle: 0

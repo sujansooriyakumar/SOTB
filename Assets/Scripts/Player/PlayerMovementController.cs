@@ -93,8 +93,8 @@ public class PlayerMovementController : MonoBehaviour
             targetCell += new Vector3Int(Mathf.RoundToInt(moveVector.x), Mathf.RoundToInt(moveVector.y), 0);
 
             Vector3 targetPos = mapGrid.GetCellCenterLocal(targetCell);
-
-            if (StateCheck() && !collisionController.CheckCollision() && moveVector != Vector2.zero)
+            GameObject collision = collisionController.CheckCollision();
+            if (StateCheck() && (!collision || collision.GetComponent<MapPortal>() != null) && moveVector != Vector2.zero)
             {
 
 
@@ -115,6 +115,12 @@ public class PlayerMovementController : MonoBehaviour
 
                     transform.position = targetPos;
 
+                }
+                if (collision != null && collision.TryGetComponent<MapPortal>(out MapPortal mapPortal))
+                {
+                    MapNavigation.instance.GoToCell(mapPortal.GetTargetCell(), transform);
+                    GetComponent<PlayerAnimationController>().ForceIdleState(mapPortal.GetTargetState());
+                    stateController.UpdateState(mapPortal.GetTargetState());
                 }
 
 

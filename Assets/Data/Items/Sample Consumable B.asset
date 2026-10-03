@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9cd9d262aead704eafa0c5886d9476d, type: 3}
   m_Name: Sample Consumable B
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableItemSO
-  uID: 0
-  itemName: 
-  itemDescription: 
+  uID: 1
+  itemName: blue potion
+  itemDescription: a blue potion
   sellPrice: 0
   effects: []
   usableInBattle: 0

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4020171a2de42fe4e8a2bf2db16160b4, type: 3}
   m_Name: Sample Weapn
   m_EditorClassIdentifier: Assembly-CSharp::WeaponItemSO
-  uID: 0
-  itemName: 
-  itemDescription: 
+  uID: 2
+  itemName: keyblade
+  itemDescription: heal
   sellPrice: 0
   weaponClass: {fileID: 0}
   damageAttribute: 0
