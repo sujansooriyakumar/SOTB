@@ -5,6 +5,8 @@ public class PlayerInputController : MonoBehaviour
 {
     public InputActionAsset inputAsset;
     public static event Action<Vector2> OnWalkPerformed;
+    private Vector2 inputVector;
+    
     public static event Action OnMenuPerformed;
     public static event Action OnInteractPerformed;
     InputAction walkAction;
@@ -25,23 +27,38 @@ public class PlayerInputController : MonoBehaviour
 
         interactAction.performed += InteractInput_Performed;
         menuAction.performed += MenuInput_Performed;
+        GetComponent<PlayerMovementController>().UpdateIsMoving += UpdateActionableState;
         GameStateManager.OnStateChanged += UpdateOverworldControlState;
     }
 
-    private void UpdateOverworldControlState(GameState gameState)
+    public void UpdateActionableState(bool moving)
     {
-        if (gameState != GameState.OVERWORLD)
+        if (moving)
         {
-            walkAction.Disable();
             menuAction.Disable();
             interactAction.Disable();
-            return;
         }
-
-        walkAction.Enable();
-        menuAction.Enable();
-        interactAction.Enable();
+        else
+        {
+            menuAction.Enable();
+            interactAction.Enable();
+        }
     }
+
+            private void UpdateOverworldControlState(GameState gameState)
+            {
+                if (gameState != GameState.OVERWORLD)
+                {
+                    walkAction.Disable();
+                    menuAction.Disable();
+                    interactAction.Disable();
+                    return;
+                }
+
+                walkAction.Enable();
+                menuAction.Enable();
+                interactAction.Enable();
+            }
 
 
     private void OnDestroy()
@@ -53,18 +70,18 @@ public class PlayerInputController : MonoBehaviour
 
     public void MenuInput_Performed(InputAction.CallbackContext c)
     {
-        OnMenuPerformed?.Invoke();
+        if (inputVector == Vector2.zero)  OnMenuPerformed?.Invoke();
     }
 
     public void InteractInput_Performed(InputAction.CallbackContext c)
     {
-        OnInteractPerformed?.Invoke();
+        if (inputVector == Vector2.zero) OnInteractPerformed?.Invoke();
     }
 
     private void FixedUpdate()
     {
-        Vector2 moveVector = walkAction.ReadValue<Vector2>();
-        OnWalkPerformed?.Invoke(moveVector);
+        inputVector = walkAction.ReadValue<Vector2>();
+        OnWalkPerformed?.Invoke(inputVector);
     }
 
    

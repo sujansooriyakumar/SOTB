@@ -67,6 +67,7 @@ public class UIController : MonoBehaviour, ICancelHandler
  
     public void OpenMenu(int id)
     {
+        if (currentMenu == menuDictionary[id]) return;
         if(currentMenu != null)
         {
             menuHistory.Push(currentMenu);

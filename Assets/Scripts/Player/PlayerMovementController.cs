@@ -14,6 +14,7 @@ public class PlayerMovementController : MonoBehaviour
     public static event Action<Vector2> OnMove;
     private PlayerCollision collisionController;
     public bool isMoving = false;
+    public event Action<bool> UpdateIsMoving;
     private void Awake()
     {
         PlayerInputController.OnWalkPerformed += UpdateMoveVector;
@@ -76,6 +77,7 @@ public class PlayerMovementController : MonoBehaviour
         return stateController.GetCurrentState() == targetState;
     }
 
+   
     private IEnumerator MovementCoroutine()
     {
 
@@ -102,6 +104,7 @@ public class PlayerMovementController : MonoBehaviour
                    
                     elapsed += Time.deltaTime;
 
+                    UpdateIsMoving?.Invoke(true);
                     isMoving = true;
 
                     float t = elapsed / moveDuration;
@@ -118,7 +121,8 @@ public class PlayerMovementController : MonoBehaviour
             }
             else
             {
-
+                UpdateIsMoving?.Invoke(false);
+                isMoving = false;
                 movementCoroutine = null;
                 yield break;
             }
