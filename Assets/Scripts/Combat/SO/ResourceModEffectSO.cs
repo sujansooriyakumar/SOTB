@@ -10,8 +10,13 @@ public class ResourceModEffectSO : EffectSO
         switch (resourceType)
         {
             case ResourceType.HP:
-                target.currentHP += effectValue;
-                target.currentHP = Mathf.CeilToInt(target.maxHP);
+                int newHP = target.currentHP + effectValue;
+                newHP = Mathf.CeilToInt(target.maxHP);
+                int hpGained = newHP - target.currentHP;
+                target.currentHP = newHP;
+                string systemMessage = target.characterName + " gained " + hpGained.ToString() + " HP!";
+                //DialogDisplay.Instance.DisplaySystemMessage(systemMessage);
+                
                 break;
             case ResourceType.SP:
                 target.currentSP += effectValue;

@@ -54,7 +54,7 @@ public class UIController : MonoBehaviour, ICancelHandler
     private void OpenMainMenu() { OpenMenu(0); }
     private void OnCancelPressed(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        CloseMenu();
+        if(GameStateManager.GetGameState() == GameState.UI) CloseMenu();
     }
     private void Start()
     {

@@ -19,7 +19,6 @@ public class UIItemTargetSelect : UIMenu
             targetSelectButton.InitializeButton(participant);
             targetSelectButton.OnTargetSelected += UseItem;
             buttons.Add(tmp.GetComponent<Button>());
-            tmp.GetComponent<ItemTargetSelectButton>().OnTargetSelected += UseItem;
         }
         EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
     }
@@ -31,10 +30,10 @@ public class UIItemTargetSelect : UIMenu
     private void UseItem(CombatParticipantData target)
     {
         itemToUse.UseItem(target);
-        UIController.Instance.CloseMenu();
         InventoryController.Instance.RemoveItem(itemToUse.uID);
     }
 
+   
     public override void DeactivateMenu()
     {
        
