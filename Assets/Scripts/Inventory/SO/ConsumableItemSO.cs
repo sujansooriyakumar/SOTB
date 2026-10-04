@@ -9,11 +9,11 @@ public class ConsumableItemSO : SellableItemSO
     public bool usableInBattle;
     public bool usableOutOfBattle;
 
-    public void UseItem(CombatParticipantData[] targets)
+    public void UseItem(CombatParticipantData target)
     {
         foreach(EffectSO effect in effects)
         {
-            effect.ExecuteEffect(targets);
+            effect.ExecuteEffect(target);
         }
     }
 }

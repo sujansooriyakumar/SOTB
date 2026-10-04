@@ -17,7 +17,7 @@ public class InventoryController : MonoBehaviour
     public List<InventoryItemData> questCompartmentList = new();
 
     public static InventoryController Instance;
-
+    public event Action OnInventoryUpdated;
     private void Awake()
     {
         if(Instance == null)
@@ -101,6 +101,7 @@ public class InventoryController : MonoBehaviour
                 questCompartmentList.Add(new InventoryItemData(kvp));
             }
         }
+        OnInventoryUpdated?.Invoke();
     }
 
     public void ReorderItems(List<InventoryItemData> inventoryCompartment, int fromIndex, int toIndex)

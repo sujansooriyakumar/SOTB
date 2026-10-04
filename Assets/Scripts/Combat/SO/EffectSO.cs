@@ -2,5 +2,5 @@ using UnityEngine;
 
 public abstract class EffectSO : ScriptableObject
 {
-    public abstract void ExecuteEffect(CombatParticipantData[] targets);
+    public abstract void ExecuteEffect(CombatParticipantData target);
 }

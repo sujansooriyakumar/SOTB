@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIPauseMenu : UIMenu
 {
@@ -10,6 +11,9 @@ public class UIPauseMenu : UIMenu
     [SerializeField] private GameObject partyMemberDisplayPrefab;
     [SerializeField] private GameObject firstItem;
     private List<GameObject> partyObjects = new();
+
+    [Header("Buttons")]
+    [SerializeField] private Button statusButton;
     public override void ActivateMenu()
     {
         base.ActivateMenu();
@@ -26,6 +30,12 @@ public class UIPauseMenu : UIMenu
             }
         }
         EventSystem.current.SetSelectedGameObject(firstItem);
+        SetUpButtons();
+    }
+
+    private void SetUpButtons()
+    {
+        buttons[2].onClick.AddListener(() => UIController.Instance.OpenMenu(1));
     }
 
     private void InstantiatePartyDisplay(Transform parent, CombatParticipantData partyMember)

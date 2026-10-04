@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9cd9d262aead704eafa0c5886d9476d, type: 3}
-  m_Name: Sample Consumable A
+  m_Name: Minor Healing Potion
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableItemSO
   uID: 0
-  itemName: red potion
-  itemDescription: a red potion
+  itemName: Minor Healing Potion
+  itemDescription: A potion that heals 20 HP to a single target.
   sellPrice: 10
-  effects: []
-  usableInBattle: 0
-  usableOutOfBattle: 0
+  effects:
+  - {fileID: 11400000, guid: 6420b5952f3091b4692be208fbbac552, type: 2}
+  usableInBattle: 1
+  usableOutOfBattle: 1

@@ -65,9 +65,9 @@ public class UIController : MonoBehaviour, ICancelHandler
     }
 
  
-    public void OpenMenu(int id)
+    public UIMenu OpenMenu(int id)
     {
-        if (currentMenu == menuDictionary[id]) return;
+        if (currentMenu == menuDictionary[id] || menuHistory.Contains(menuDictionary[id])) return null;
         if(currentMenu != null)
         {
             menuHistory.Push(currentMenu);
@@ -81,6 +81,8 @@ public class UIController : MonoBehaviour, ICancelHandler
         targetMenu.ActivateMenu();
         currentMenu = targetMenu;
         GameStateManager.ChangeGameState(GameState.UI);
+        return currentMenu;
+
     }
 
     public void CloseMenu()

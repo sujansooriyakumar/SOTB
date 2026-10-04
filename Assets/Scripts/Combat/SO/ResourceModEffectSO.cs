@@ -5,19 +5,20 @@ public class ResourceModEffectSO : EffectSO
 {
     public ResourceType resourceType;
     public int effectValue;
-    public override void ExecuteEffect(CombatParticipantData[] targets)
+    public override void ExecuteEffect(CombatParticipantData target)
     {
-        foreach (CombatParticipantData target in targets)
+        switch (resourceType)
         {
-            switch (resourceType)
-            {
-                case ResourceType.HP:
-                    target.currentHP += effectValue;
-                    break;
-                case ResourceType.SP:
-                    target.currentSP += effectValue;
-                    break;
-            }
+            case ResourceType.HP:
+                target.currentHP += effectValue;
+                target.currentHP = Mathf.CeilToInt(target.maxHP);
+                break;
+            case ResourceType.SP:
+                target.currentSP += effectValue;
+                target.currentSP = Mathf.CeilToInt(target.maxSP);
+
+                break;
         }
+
     }
 }
