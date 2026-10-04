@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Minor HP Heal
   m_EditorClassIdentifier: Assembly-CSharp::ResourceModEffectSO
   resourceType: 0
-  effectValue: 0
+  effectValue: 20
