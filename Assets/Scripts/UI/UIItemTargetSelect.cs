@@ -1,54 +1,55 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class UIItemTargetSelect : UIMenu
 {
     [SerializeField] private GameObject buttonPrefab;
-    [SerializeField] Transform buttonParent;
+    [SerializeField] private Transform buttonParent;
+
+    private readonly List<ItemTargetSelectButton> targetButtons = new();
     private ConsumableItemSO itemToUse;
-    public override void ActivateMenu()
+
+    public void SetItem(ConsumableItemSO item)
     {
-        List<CombatParticipantData> party = PartyManager.Instance.GetParty();
-        foreach(CombatParticipantData participant in party)
-        {
-            GameObject tmp = Instantiate(buttonPrefab, buttonParent);
-            ItemTargetSelectButton targetSelectButton = tmp.GetComponent<ItemTargetSelectButton>();
-            targetSelectButton.InitializeButton(participant);
-            targetSelectButton.OnTargetSelected += UseItem;
-            buttons.Add(tmp.GetComponent<Button>());
-        }
-        EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
+        itemToUse = item;
     }
-    public void SetItem(ConsumableItemSO itemToUse_)
+
+    protected override void OnOpen()
     {
-        this.itemToUse = itemToUse_;
+        foreach (CombatParticipantData participant in PartyManager.Instance.GetParty())
+        {
+            ItemTargetSelectButton targetButton =
+                Instantiate(buttonPrefab, buttonParent).GetComponent<ItemTargetSelectButton>();
+            targetButton.InitializeButton(participant);
+            targetButton.OnTargetSelected += UseItem;
+            targetButtons.Add(targetButton);
+        }
+    }
+
+    protected override void OnClose()
+    {
+        foreach (ItemTargetSelectButton button in targetButtons)
+        {
+            button.OnTargetSelected -= UseItem;
+            Destroy(button.gameObject);
+        }
+        targetButtons.Clear();
+        itemToUse = null;
+    }
+
+    protected override GameObject GetDefaultSelection()
+    {
+        return targetButtons.Count > 0 ? targetButtons[0].gameObject : null;
     }
 
     private void UseItem(CombatParticipantData target)
     {
+        if (itemToUse == null) return;
+
         itemToUse.UseItem(target);
+
+
         InventoryController.Instance.RemoveItem(itemToUse.uID);
-    }
-
-   
-    public override void DeactivateMenu()
-    {
-       
-        
-        base.DeactivateMenu();
-    }
-
-    public override void CloseMenu()
-    {
-        foreach (Button button in buttons)
-        {
-            button.onClick.RemoveAllListeners();
-            Destroy(button.gameObject);
-        }
-        buttons.Clear();
-        base.CloseMenu();
+        UIController.Instance.ReturnTo<UIInventoryMenu>();
     }
 }

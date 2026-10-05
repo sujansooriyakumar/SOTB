@@ -1,59 +1,53 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIPauseMenu : UIMenu
 {
+    [Header("Party Display")]
     [SerializeField] private Transform frontlineParent;
     [SerializeField] private Transform backlineParent;
     [SerializeField] private GameObject partyMemberDisplayPrefab;
-    [SerializeField] private GameObject firstItem;
-    private List<GameObject> partyObjects = new();
+    [SerializeField] private int frontlineSize = 4;
 
     [Header("Buttons")]
+    [SerializeField] private Button inventoryButton;
     [SerializeField] private Button statusButton;
-    public override void ActivateMenu()
+
+    private readonly List<GameObject> partyObjects = new();
+
+    private void Awake()
     {
-        base.ActivateMenu();
+        inventoryButton.onClick.AddListener(() => UIController.Instance.Open<UIInventoryMenu>());
+    }
+
+    protected override void OnOpen()
+    {
         List<CombatParticipantData> party = PartyManager.Instance.GetParty();
         for (int i = 0; i < party.Count; i++)
         {
-            if (i <= 3)
-            {
-               InstantiatePartyDisplay(frontlineParent, party[i]);
-            }
-            else
-            {
-              InstantiatePartyDisplay(backlineParent, party[i]);
-            }
+            Transform parent = i < frontlineSize ? frontlineParent : backlineParent;
+            InstantiatePartyDisplay(parent, party[i]);
         }
-        EventSystem.current.SetSelectedGameObject(firstItem);
-        SetUpButtons();
     }
 
-    private void SetUpButtons()
+    protected override void OnClose()
     {
-        buttons[2].onClick.AddListener(() => UIController.Instance.OpenMenu(1));
+        foreach (GameObject display in partyObjects)
+        {
+            Destroy(display);
+        }
+        partyObjects.Clear();
     }
 
     private void InstantiatePartyDisplay(Transform parent, CombatParticipantData partyMember)
     {
-        GameObject tmp = Instantiate(partyMemberDisplayPrefab, parent);
-        partyObjects.Add(tmp);
-        if (tmp.TryGetComponent<CharacterDisplayUI>(out CharacterDisplayUI ui))
+        GameObject display = Instantiate(partyMemberDisplayPrefab, parent);
+        partyObjects.Add(display);
+
+        if (display.TryGetComponent(out CharacterDisplayUI ui))
         {
             ui.InitializeDisplay(partyMember);
         }
-    }
-    public override void DeactivateMenu()
-    {
-        base .DeactivateMenu();
-        foreach (GameObject tmp in partyObjects)
-        {
-            Destroy(tmp);
-        }
-        partyObjects.Clear();
     }
 }

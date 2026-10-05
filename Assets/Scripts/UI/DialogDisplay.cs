@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
-public class DialogDisplay : MonoBehaviour
+public class DialogDisplay : MonoBehaviour, IUIOverlay
 {
-    [Header("Event Handler")]
-    [SerializeField] private InputSystemUIInputModule uiInputModule;
-
     [Header("UI References")]
     [SerializeField] private TMP_Text dialogText;
     [SerializeField] private TMP_Text speakerText;
@@ -19,7 +14,7 @@ public class DialogDisplay : MonoBehaviour
     [SerializeField] private GameObject portraitContainer;
     [SerializeField] private TMP_Text systemDialogText;
     public TMP_Text activeTextBox;
-    
+
 
     [Header("Display Settings")]
     [SerializeField] private float typingSpeed = 0.02f;
@@ -43,44 +38,8 @@ public class DialogDisplay : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void OnEnable()
-    {
-        if (uiInputModule != null)
-        {
-            if (uiInputModule.cancel != null)
-            {
-                uiInputModule.cancel.action.performed += AdvanceDialog;
-            }
-
-            if (uiInputModule.submit != null)
-            {
-                uiInputModule.submit.action.performed += AdvanceDialog;
-            }
-        }
-    }
-
-    private void OnDisable()
-    {
-
-
-        if (uiInputModule != null)
-        {
-            if (uiInputModule.cancel != null)
-            {
-                uiInputModule.cancel.action.performed -= AdvanceDialog;
-            }
-
-            if (uiInputModule.submit != null)
-            {
-                uiInputModule.submit.action.performed -= AdvanceDialog;
-            }
-        }
-    }
-
-    private void AdvanceDialog(InputAction.CallbackContext c)
-    {
-        inputReceived = true;
-    }
+    public void HandleSubmit() => inputReceived = true;
+    public void HandleCancel() => inputReceived = true;
 
     [ContextMenu("Test Dialog")]
     public void TestDialog()
@@ -100,10 +59,11 @@ public class DialogDisplay : MonoBehaviour
 
     private IEnumerator DisplayMessagePaginated(Queue<DialogLineData> messages)
     {
+        UIController.Instance.PushOverlay(this);
         OnMessageStart?.Invoke();
         while (messages.Count > 0)
         {
-           
+
             DialogLineData currentMessage = messages.Dequeue();
             Debug.Log(currentMessage.dialogText);
             HandleMessageType(currentMessage.speakerID);
@@ -133,13 +93,14 @@ public class DialogDisplay : MonoBehaviour
             yield return null;
         }
 
+        UIController.Instance.PopOverlay(this);
         OnMessageEnd?.Invoke();
-        
+
     }
 
     private void HandleMessageType(int speakerID)
     {
-        if(speakerID >= 0)
+        if (speakerID >= 0)
         {
             CharacterSO speaker = CharacterManager.Instance.GetCharacterData(speakerID);
             portraitContainer.SetActive(true);

@@ -6,20 +6,20 @@ public class PlayerInputController : MonoBehaviour
     public InputActionAsset inputAsset;
     public static event Action<Vector2> OnWalkPerformed;
     private Vector2 inputVector;
-    
+
     public static event Action OnMenuPerformed;
     public static event Action OnInteractPerformed;
     InputAction walkAction;
     InputAction interactAction;
     InputAction menuAction;
 
-   
+
     private void Awake()
     {
 
-         walkAction = inputAsset.FindAction("Walk");
-         interactAction = inputAsset.FindAction("Interact");
-         menuAction = inputAsset.FindAction("Menu");
+        walkAction = inputAsset.FindAction("Walk");
+        interactAction = inputAsset.FindAction("Interact");
+        menuAction = inputAsset.FindAction("Menu");
 
         walkAction.Enable();
         interactAction.Enable();
@@ -28,7 +28,7 @@ public class PlayerInputController : MonoBehaviour
         interactAction.performed += InteractInput_Performed;
         menuAction.performed += MenuInput_Performed;
         GetComponent<PlayerMovementController>().UpdateIsMoving += UpdateActionableState;
-        GameStateManager.OnStateChanged += UpdateOverworldControlState;
+        UIController.OnUIActiveChanged += UpdateOverworldControlState;
     }
 
     public void UpdateActionableState(bool moving)
@@ -45,32 +45,34 @@ public class PlayerInputController : MonoBehaviour
         }
     }
 
-            private void UpdateOverworldControlState(GameState gameState)
-            {
-                if (gameState != GameState.OVERWORLD)
-                {
-                    walkAction.Disable();
-                    menuAction.Disable();
-                    interactAction.Disable();
-                    return;
-                }
+    private void UpdateOverworldControlState(bool inUI)
+    {
+        if (inUI)
+        {
+            walkAction.Disable();
+            menuAction.Disable();
+            interactAction.Disable();
+            return;
+        }
 
-                walkAction.Enable();
-                menuAction.Enable();
-                interactAction.Enable();
-            }
+        walkAction.Enable();
+        menuAction.Enable();
+        interactAction.Enable();
+    }
 
 
     private void OnDestroy()
     {
         interactAction.performed -= InteractInput_Performed;
         menuAction.performed -= MenuInput_Performed;
-        GameStateManager.OnStateChanged -= UpdateOverworldControlState;
+        UIController.OnUIActiveChanged -= UpdateOverworldControlState;
+        GetComponent<PlayerMovementController>().UpdateIsMoving -= UpdateActionableState;
+
     }
 
     public void MenuInput_Performed(InputAction.CallbackContext c)
     {
-        if (inputVector == Vector2.zero)  OnMenuPerformed?.Invoke();
+        if (inputVector == Vector2.zero) OnMenuPerformed?.Invoke();
     }
 
     public void InteractInput_Performed(InputAction.CallbackContext c)
@@ -84,5 +86,5 @@ public class PlayerInputController : MonoBehaviour
         OnWalkPerformed?.Invoke(inputVector);
     }
 
-   
+
 }

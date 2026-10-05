@@ -1,11 +1,9 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIItemContextMenu : UIMenu
 {
-
     [SerializeField] private Button useButton;
     [SerializeField] private Button equipButton;
     [SerializeField] private Button tossButton;
@@ -14,19 +12,28 @@ public class UIItemContextMenu : UIMenu
     [SerializeField] private Color disabledColor;
     [SerializeField] private Color enabledColor;
 
-    public ItemSO itemSelected;
-    public override void ActivateMenu()
-    {
-        buttons.Add(useButton);
-        buttons.Add(equipButton);
-        buttons.Add(tossButton);
-        buttons.Add(cancelButton);
+    private ItemSO itemSelected;
+    private Button[] allButtons;
 
+    private void Awake()
+    {
+        allButtons = new[] { useButton, equipButton, tossButton, cancelButton };
+
+        useButton.onClick.AddListener(Use);
+        cancelButton.onClick.AddListener(() => UIController.Instance.Back());
+    }
+
+    public void SetItem(InventoryItemData itemData)
+    {
+        itemSelected = InventoryController.Instance.GetItemData(itemData.uid);
+    }
+
+    protected override void OnOpen()
+    {
         var (canUse, canEquip, canToss) = itemSelected switch
         {
             ConsumableItemSO => (true, false, true),
             WeaponItemSO or ArmorItemSO => (false, true, true),
-            QuestItemSO => (false, false, false),
             _ => (false, false, false)
         };
 
@@ -34,52 +41,28 @@ public class UIItemContextMenu : UIMenu
         SetButtonState(equipButton, canEquip);
         SetButtonState(tossButton, canToss);
         SetButtonState(cancelButton, true);
+    }
 
-        foreach (var button in new[] { useButton, equipButton, tossButton, cancelButton })
+    protected override void OnClose()
+    {
+        itemSelected = null;
+    }
+
+    protected override GameObject GetDefaultSelection()
+    {
+        foreach (Button button in allButtons)
         {
-            if (button.interactable)
-            {
-                EventSystem.current.SetSelectedGameObject(button.gameObject);
-                break;
-            }
+            if (button.interactable) return button.gameObject;
         }
-        SetUpButtonEvents();
-    }
-
-    public override void DeactivateMenu()
-    {
-        EventSystem.current.SetSelectedGameObject(null);
-        useButton.onClick.RemoveAllListeners();
-        equipButton.onClick.RemoveAllListeners();
-        tossButton.onClick.RemoveAllListeners();
-        cancelButton.onClick.RemoveAllListeners();
-        base.DeactivateMenu();
-        buttons.Clear();
-        
-    }
-
-    public void GetItemSelected(InventoryItemData itemData_)
-    {
-      itemSelected = InventoryController.Instance.GetItemData(itemData_.uid);
-
-    }
-
-    private void SetUpButtonEvents()
-    {
-        useButton.onClick.AddListener(Use);
-        cancelButton.onClick.AddListener(Cancel);
+        return null;
     }
 
     private void Use()
     {
-        UIItemTargetSelect targetSelectMenu = UIController.Instance.OpenMenu(3) as UIItemTargetSelect;
-        targetSelectMenu.SetItem(itemSelected as ConsumableItemSO);
-    }
-
-    private void Cancel()
-    {
-
-        UIController.Instance.CloseMenu();
+        if (itemSelected is ConsumableItemSO consumable)
+        {
+            UIController.Instance.Open<UIItemTargetSelect>(menu => menu.SetItem(consumable));
+        }
     }
 
     private void SetButtonState(Button button, bool state)
@@ -88,9 +71,4 @@ public class UIItemContextMenu : UIMenu
         TMP_Text text = button.GetComponentInChildren<TMP_Text>();
         text.color = state ? enabledColor : disabledColor;
     }
-
-
-
-
-
 }
