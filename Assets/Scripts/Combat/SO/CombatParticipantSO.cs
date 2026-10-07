@@ -1,6 +1,8 @@
 using Sirenix.OdinInspector;
-using UnityEngine;
+using Sirenix.Serialization;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "CombatParticipantSO", menuName = "SOTB/Combat/CombatParticipantSO")]
 public class CombatParticipantSO : SerializedScriptableObject
@@ -20,13 +22,13 @@ public class CombatParticipantSO : SerializedScriptableObject
     public int LUK;
 
     [Header("Equipment")]
+    [OdinSerialize]
+    [DictionaryDrawerSettings(IsReadOnly = true, KeyLabel = "Slot", ValueLabel = "Armor",
+                              DisplayMode = DictionaryDisplayOptions.OneLine)]
+    public Dictionary<ArmorSlot, ArmorItemSO> armor = CreateDefault();
+
     public WeaponItemSO equippedWeapon;
-  //  public Dictionary<ArmorSlot, ArmorItemSO> equippedArmor; // need to refactor
-    public ArmorItemSO equippedArmor_helm;
-    public ArmorItemSO equippedArmor_chest;
-    public ArmorItemSO equippedArmor_hands;
-    public ArmorItemSO equippedArmor_legs;
-    public ArmorItemSO equippedArmor_accessory;
+ 
 
     [Header("Weaknesses")]
     public List<DamageType> typeWeaknesses;
@@ -35,4 +37,19 @@ public class CombatParticipantSO : SerializedScriptableObject
     [Header("Resistances")]
     public List<DamageType> typeResistances;
     public List<DamageAttribute> attributeResistances;
+
+    static Dictionary<ArmorSlot, ArmorItemSO> CreateDefault()
+    {
+        var dict = new Dictionary<ArmorSlot, ArmorItemSO>();
+        foreach (ArmorSlot slot in Enum.GetValues(typeof(ArmorSlot)))
+            dict[slot] = null;
+        return dict;
+    }
+
+    void OnValidate()
+    {
+        armor ??= new Dictionary<ArmorSlot, ArmorItemSO>();
+        foreach (ArmorSlot slot in Enum.GetValues(typeof(ArmorSlot)))
+            if (!armor.ContainsKey(slot)) armor[slot] = null;
+    }
 }

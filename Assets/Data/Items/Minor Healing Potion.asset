@@ -18,5 +18,6 @@ MonoBehaviour:
   sellPrice: 10
   effects:
   - {fileID: 11400000, guid: 6420b5952f3091b4692be208fbbac552, type: 2}
+  - {fileID: 11400000, guid: 896320a9152da834eb0588f1cbdaadc3, type: 2}
   usableInBattle: 1
   usableOutOfBattle: 1

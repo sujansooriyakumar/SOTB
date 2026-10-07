@@ -24,14 +24,13 @@ public class InventoryController : MonoBehaviour
         {
             Instance = this;
         }
+        InitializeDatabase();
+
     }
 
     private void Start()
     {
-        InitializeDatabase();
-        AddItem(0);
-        AddItem(1);
-        AddItem(2);
+
 
     }
 
@@ -55,6 +54,30 @@ public class InventoryController : MonoBehaviour
         UpdateListFromDictionary();
     }
 
+    public void AddItem(int uid, int qty)
+    {
+        if (!inventory.TryAdd(uid, qty))
+        {
+            inventory[uid] += qty;
+        }
+        UpdateListFromDictionary();
+    }
+
+    public void UseItem(int uid, CombatParticipantData target)
+    {
+        ConsumableItemSO consumable = itemDictionary[uid] as ConsumableItemSO;
+        if (consumable.UseItem(target))
+        {
+            RemoveItem(uid);
+
+        }
+        else
+        {
+            string systemMessage = "Won't have any effect.";
+            DialogDisplay.Instance.DisplaySystemMessage(systemMessage);
+        }
+    }
+
     public void RemoveItem(int uid)
     {
        // Dictionary<int, InventoryItemData> targetDictionary = GetTargetInventory(uid);
@@ -62,6 +85,19 @@ public class InventoryController : MonoBehaviour
         if (inventory.ContainsKey(uid))
         {
             inventory[uid] -= 1;
+            if (inventory[uid] <= 0)
+            {
+                inventory.Remove(uid);
+            }
+        }
+        UpdateListFromDictionary();
+    }
+
+    public void RemoveItem(int uid, int qty)
+    {
+        if (inventory.ContainsKey(uid))
+        {
+            inventory[uid] -= qty; 
             if (inventory[uid] <= 0)
             {
                 inventory.Remove(uid);

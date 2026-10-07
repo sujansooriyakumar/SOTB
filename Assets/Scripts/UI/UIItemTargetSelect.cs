@@ -46,10 +46,9 @@ public class UIItemTargetSelect : UIMenu
     {
         if (itemToUse == null) return;
 
-        itemToUse.UseItem(target);
 
 
-        InventoryController.Instance.RemoveItem(itemToUse.uID);
+        InventoryController.Instance.UseItem(itemToUse.uID, target);
         UIController.Instance.ReturnTo<UIInventoryMenu>();
     }
 }

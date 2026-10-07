@@ -1,12 +1,16 @@
 using NUnit.Framework;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PartyManager : MonoBehaviour
+public class PartyManager : SerializedMonoBehaviour
 {
     public CombatParticipantSO sample;
     public CombatParticipantSO sample2;
 
+    [NonSerialized, OdinSerialize]
     public List<CombatParticipantData> partyMembers = new();
     public static PartyManager Instance;
 

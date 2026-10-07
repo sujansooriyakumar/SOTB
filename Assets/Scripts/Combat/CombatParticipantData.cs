@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [Serializable]
@@ -39,11 +41,7 @@ public class CombatParticipantData
         currentSP = maxSP;
 
         equipmentData = new EquipmentData();
-        if (config.equippedArmor_accessory != null) equipmentData.EquipArmor(config.equippedArmor_accessory.uID);
-        if (config.equippedArmor_chest != null) equipmentData.EquipArmor(config.equippedArmor_chest.uID);
-        if (config.equippedArmor_hands != null) equipmentData.EquipArmor(config.equippedArmor_hands.uID);
-        if (config.equippedArmor_helm != null) equipmentData.EquipArmor(config.equippedArmor_helm.uID);
-        if (config.equippedArmor_legs != null) equipmentData.EquipArmor(config.equippedArmor_legs.uID);
+        equipmentData.InitializeArmor(config.armor);
 
         if (config.equippedWeapon != null)
         {
@@ -55,5 +53,72 @@ public class CombatParticipantData
 
         attributeWeaknesses = config.attributeWeaknesses;
         typeWeaknesses = config.typeWeaknesses;
+        CalculateSubstats();
+    }
+
+    public void CalculateSubstats()
+    {
+        stats.subStats[CombatStat.ATK] = CalculateAtk(equipmentData);
+        stats.subStats[CombatStat.PDEF] = CalculatePDef(equipmentData);
+        stats.subStats[CombatStat.MDEF] = CalculateMDef(equipmentData);
+        stats.subStats[CombatStat.DODGE] = CalculateDodge(equipmentData);
+        stats.subStats[CombatStat.HIT] = CalculateHit(equipmentData);
+        stats.subStats[CombatStat.CRIT] = CalculateCrit(equipmentData);
+    }
+
+
+
+    public int CalculateAtk(EquipmentData equipmentData_)
+    {
+        var weaponStats = equipmentData_.equippedWeapon?.damageStat;
+        EquipmentData t = equipmentData_;
+        float attackStat = 0;
+        if (weaponStats == null || weaponStats.Length == 0)
+            return stats.GetStat(CombatStat.STR);
+        attackStat = (float)weaponStats.Average(stats.GetStat) * (1f + equipmentData_.equippedWeapon.weaponStrength / 100f);
+        return Mathf.CeilToInt(attackStat);
+    }
+
+
+    public int CalculatePDef(EquipmentData equipmentData_)
+    {
+        float armorRating = 0f;
+        foreach (ArmorItemSO armor in equipmentData_.equippedArmor.Values)
+        {
+            if (armor != null)
+                armorRating += armor.PDEFRating;
+        }
+
+        return Mathf.CeilToInt(stats.GetStat(CombatStat.DEF) * (1f + armorRating * 0.01f));
+    }
+
+    public int CalculateMDef(EquipmentData equipmentData_)
+    {
+        float armorRating = 0f;
+        foreach (ArmorItemSO armor in equipmentData_.equippedArmor.Values)
+        {
+            if (armor != null)
+                armorRating += armor.MDEFRating;
+        }
+
+        return Mathf.CeilToInt(stats.GetStat(CombatStat.SPI) * (1f + armorRating * 0.01f));
+    }
+
+    public int CalculateDodge(EquipmentData equipmentData_)
+    {
+        float result = level + stats.GetStat(CombatStat.DEX) + (stats.GetStat(CombatStat.LUK) / 3f);
+        return Mathf.CeilToInt(result);
+    }
+
+    public int CalculateHit(EquipmentData equipmentData_)
+    {
+        float result = level + stats.GetStat(CombatStat.AGI) + (stats.GetStat(CombatStat.LUK) / 5f);
+        return Mathf.CeilToInt(result);
+    }
+
+    public int CalculateCrit(EquipmentData equipmentData_)
+    {
+        float result = level + stats.GetStat(CombatStat.LUK) / 3f;
+        return Mathf.CeilToInt(result);
     }
 }

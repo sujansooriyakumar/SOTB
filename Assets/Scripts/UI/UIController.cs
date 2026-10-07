@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -15,20 +14,36 @@ public class UIController : MonoBehaviour
     [Tooltip("Menu/Start binding in the UI action map, so the menu button still closes menus while the Player map is off. Optional.")]
     [SerializeField] private InputActionReference closeMenuAction;
 
-    private readonly Dictionary<Type, UIMenu> menus = new();
-    private readonly Stack<UIMenu> stack = new();
-    private readonly List<IUIOverlay> overlays = new();
+    private readonly Dictionary<Type, UIMenu> screens = new();
+    private Stack<UIMenu>[] layers;
     private readonly HashSet<UIMenu> transitioning = new();
     private bool uiActive;
+    private bool menusOpen;
 
     public static UIController Instance { get; private set; }
 
-
+    // Raised when the UI starts or stops needing input. Switch action maps here
+    // (e.g. disable the Player map while true) instead of checking game state everywhere.
     public static event Action<bool> OnUIActiveChanged;
 
-    public UIMenu Current => stack.Count > 0 ? stack.Peek() : null;
-    public bool HasOverlay => overlays.Count > 0;
+    // The focused screen: top of the highest non-empty layer.
+    public UIMenu Top
+    {
+        get
+        {
+            for (int i = layers.Length - 1; i >= 0; i--)
+            {
+                if (layers[i].Count > 0) return layers[i].Peek();
+            }
+            return null;
+        }
+    }
 
+    // Top of the menu layer, whether or not a modal is covering it.
+    public UIMenu CurrentMenu => TopOf(UILayer.Menu);
+    public bool HasModal => layers[(int)UILayer.Modal].Count > 0;
+
+    // True while any screen is animating open or closed, including screens already popped.
     public bool IsTransitioning => transitioning.Count > 0;
 
     private void Awake()
@@ -42,17 +57,22 @@ public class UIController : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        foreach (UIMenu menu in GetComponentsInChildren<UIMenu>(true))
+        int layerCount = Enum.GetValues(typeof(UILayer)).Length;
+        layers = new Stack<UIMenu>[layerCount];
+        for (int i = 0; i < layerCount; i++) layers[i] = new Stack<UIMenu>();
+
+        // Finds every screen under this object, including inactive ones.
+        foreach (UIMenu screen in GetComponentsInChildren<UIMenu>(true))
         {
-            if (!menus.TryAdd(menu.GetType(), menu))
-                Debug.LogError($"Duplicate menu type {menu.GetType().Name} on {menu.name}", menu);
+            if (!screens.TryAdd(screen.GetType(), screen))
+                Debug.LogError($"Duplicate screen type {screen.GetType().Name} on {screen.name}", screen);
 
-            menu.TransitionStateChanged += OnMenuTransitionChanged;
-
-            menu.gameObject.SetActive(false);
+            screen.TransitionStateChanged += OnScreenTransitionChanged;
+            screen.gameObject.SetActive(false);
         }
     }
 
+    // ---------- Input: this is the only place UI input is subscribed ----------
 
     private void OnEnable()
     {
@@ -91,170 +111,191 @@ public class UIController : MonoBehaviour
         if (closeMenuAction != null) closeMenuAction.action.performed -= OnCloseMenuPressed;
     }
 
+    // Every action goes to the top screen first. Only cancel has a default if it's unhandled.
 
     private void OnCancelPressed(InputAction.CallbackContext context)
     {
         if (IsTransitioning) return;
 
-        if (HasOverlay)
-        {
-            TopOverlay.HandleCancel();
-            return;
-        }
-
-        if (Current == null) return;
-        if (!Current.HandleCancel()) Back();
+        UIMenu top = Top;
+        if (top != null && !top.HandleCancel()) Close(top);
     }
 
     private void OnSubmitPressed(InputAction.CallbackContext context)
     {
-
         if (IsTransitioning) return;
-        if (HasOverlay) TopOverlay.HandleSubmit();
+        Top?.HandleSubmit();
     }
 
     private void OnPagePressed(InputAction.CallbackContext context)
     {
         int direction = Mathf.RoundToInt(context.ReadValue<float>());
-        if (direction == 0 || IsTransitioning || HasOverlay || Current == null) return;
+        if (direction == 0 || IsTransitioning) return;
 
-        Current.HandlePage(direction);
+        Top?.HandlePage(direction);
     }
 
     private void OnMenuPressed()
     {
-        if (IsTransitioning || HasOverlay) return;
+        if (IsTransitioning || HasModal) return;
 
-        if (Current == null) Open<UIPauseMenu>();
-        else CloseAll();
+        if (CurrentMenu == null) Open<UIPauseMenu>();
+        else CloseAllMenus();
     }
 
     private void OnCloseMenuPressed(InputAction.CallbackContext context)
     {
-        if (!IsTransitioning && !HasOverlay && Current != null) CloseAll();
+        // Only closes. Opening comes from the Player map through OnMenuPressed.
+        if (!IsTransitioning && !HasModal && CurrentMenu != null) CloseAllMenus();
     }
 
     // ---------- Transitions ----------
 
-    private void OnMenuTransitionChanged(UIMenu menu, bool isTransitioning)
+    private void OnScreenTransitionChanged(UIMenu screen, bool isTransitioning)
     {
-        if (isTransitioning) transitioning.Add(menu);
-        else transitioning.Remove(menu);
+        if (isTransitioning) transitioning.Add(screen);
+        else transitioning.Remove(screen);
 
-
+        // Submit, cancel and navigation through the EventSystem are blocked while anything animates.
         if (EventSystem.current != null)
             EventSystem.current.sendNavigationEvents = !IsTransitioning;
     }
 
-    // ---------- Overlays ----------
-
-    private IUIOverlay TopOverlay => overlays[overlays.Count - 1];
-
-    public void PushOverlay(IUIOverlay overlay)
-    {
-        if (overlays.Contains(overlay)) return;
-
-        overlays.Add(overlay);
-        if (Current != null) Current.Unfocus();
-        UpdateUIActive();
-    }
-
-    public void PopOverlay(IUIOverlay overlay)
-    {
-        if (!overlays.Remove(overlay)) return;
-
-        if (!HasOverlay && Current != null) Current.Focus();
-        UpdateUIActive();
-    }
-
-    // ---------- Menus ----------
+    // ---------- Screens ----------
 
     public T Get<T>() where T : UIMenu
     {
-        if (menus.TryGetValue(typeof(T), out UIMenu menu)) return (T)menu;
+        if (screens.TryGetValue(typeof(T), out UIMenu screen)) return (T)screen;
 
-        Debug.LogError($"No menu of type {typeof(T).Name} found under {name}");
+        Debug.LogError($"No screen of type {typeof(T).Name} found under {name}");
         return null;
     }
 
-
+    // Opens a screen on top of its layer. If it's already open, closes everything above it
+    // on that layer instead (setup is not run again in that case).
+    // Use setup to pass data in before the screen's OnOpen runs.
     public T Open<T>(Action<T> setup = null) where T : UIMenu
     {
-        T menu = Get<T>();
-        if (menu == null) return null;
+        T screen = Get<T>();
+        if (screen == null) return null;
 
-        if (stack.Contains(menu))
+        Stack<UIMenu> layer = LayerOf(screen);
+        if (layer.Contains(screen))
         {
-            ReturnTo(menu);
-            return menu;
+            ReturnTo(screen);
+            return screen;
         }
 
-        if (Current != null) Current.Unfocus();
+        // If this screen is still animating closed from a previous use, finish that first
+        // so its OnClose cleanup can't wipe out the data setup is about to pass in.
+        screen.SkipTransition();
+        setup?.Invoke(screen);
 
+        ChangeScreens(() =>
+        {
+            layer.Push(screen);
+            screen.Open();
+        });
 
-        menu.SkipTransition();
-
-        setup?.Invoke(menu);
-        stack.Push(menu);
-        menu.Open();
-
-
-        if (!HasOverlay) menu.Focus();
-
-        GameStateManager.ChangeGameState(GameState.UI);
-        UpdateUIActive();
-        return menu;
+        return screen;
     }
 
+    // Closes the topmost screen.
     public void Back()
     {
-        if (stack.Count == 0) return;
-
-        stack.Pop().Close();
-
-        if (Current != null)
-        {
-            if (!HasOverlay) Current.Focus();
-        }
-        else
-        {
-            GameStateManager.ChangeGameState(GameState.OVERWORLD);
-        }
-
-        UpdateUIActive();
+        UIMenu top = Top;
+        if (top != null) Close(top);
     }
 
+    // Closes a specific screen, along with anything above it on the same layer.
+    public void Close(UIMenu screen)
+    {
+        if (screen == null) return;
+
+        Stack<UIMenu> layer = LayerOf(screen);
+        if (!layer.Contains(screen)) return;
+
+        ChangeScreens(() =>
+        {
+            UIMenu closed;
+            do
+            {
+                closed = layer.Pop();
+                closed.Close();
+            }
+            while (closed != screen);
+        });
+    }
+
+    // Closes everything above T on T's layer. Does nothing if T isn't open.
     public void ReturnTo<T>() where T : UIMenu
     {
-        T menu = Get<T>();
-        if (menu != null) ReturnTo(menu);
+        T screen = Get<T>();
+        if (screen != null) ReturnTo(screen);
     }
 
     private void ReturnTo(UIMenu target)
     {
-        if (Current == target || !stack.Contains(target)) return;
+        Stack<UIMenu> layer = LayerOf(target);
+        if (!layer.Contains(target) || layer.Peek() == target) return;
 
-        while (stack.Peek() != target)
-            stack.Pop().Close();
-
-        if (!HasOverlay) target.Focus();
+        ChangeScreens(() =>
+        {
+            while (layer.Peek() != target)
+                layer.Pop().Close();
+        });
     }
 
-    public void CloseAll()
+    // Closes every menu. Modals (dialog, prompts) are left alone.
+    public void CloseAllMenus()
     {
-        while (stack.Count > 0)
-            stack.Pop().Close();
+        Stack<UIMenu> layer = layers[(int)UILayer.Menu];
+        if (layer.Count == 0) return;
 
-        GameStateManager.ChangeGameState(GameState.OVERWORLD);
-        UpdateUIActive();
+        ChangeScreens(() =>
+        {
+            while (layer.Count > 0)
+                layer.Pop().Close();
+        });
     }
 
-    private void UpdateUIActive()
+    // Every stack change goes through here, so focus always follows the top screen
+    // no matter which layer changed.
+    private void ChangeScreens(Action change)
     {
-        bool active = stack.Count > 0 || HasOverlay;
-        if (active == uiActive) return;
+        UIMenu before = Top;
+        change();
+        UIMenu after = Top;
 
-        uiActive = active;
-        OnUIActiveChanged?.Invoke(active);
+        if (before != after && before != null) before.Unfocus(); // no-op if it was just closed
+        if (after != null) after.Focus();                       // no-op if already focused
+
+        UpdateState();
+    }
+
+    private void UpdateState()
+    {
+        // Game state only follows the menu layer. A dialog in the overworld doesn't pause it.
+        bool anyMenus = layers[(int)UILayer.Menu].Count > 0;
+        if (anyMenus != menusOpen)
+        {
+            menusOpen = anyMenus;
+            GameStateManager.ChangeGameState(anyMenus ? GameState.UI : GameState.OVERWORLD);
+        }
+
+        bool active = Top != null;
+        if (active != uiActive)
+        {
+            uiActive = active;
+            OnUIActiveChanged?.Invoke(active);
+        }
+    }
+
+    private Stack<UIMenu> LayerOf(UIMenu screen) => layers[(int)screen.Layer];
+
+    private UIMenu TopOf(UILayer layer)
+    {
+        Stack<UIMenu> stack = layers[(int)layer];
+        return stack.Count > 0 ? stack.Peek() : null;
     }
 }

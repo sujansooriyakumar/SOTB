@@ -28,6 +28,11 @@ public class EquipmentData
         ArmorItemSO armor = InventoryController.Instance.GetItemData(armorToEquip) as ArmorItemSO;
         equippedArmor[armor.armorSlot] = armor;
     }
+
+    public void InitializeArmor(Dictionary<ArmorSlot, ArmorItemSO> armorToEquip)
+    {
+        equippedArmor = armorToEquip;
+    }
 }
 
 

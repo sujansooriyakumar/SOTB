@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 [CreateAssetMenu(fileName = "ConsumableItemSO", menuName = "SOTB/Inventory/ConsumableItemSO")]
 public class ConsumableItemSO : SellableItemSO
@@ -9,11 +10,28 @@ public class ConsumableItemSO : SellableItemSO
     public bool usableInBattle;
     public bool usableOutOfBattle;
 
-    public void UseItem(CombatParticipantData target)
+    public bool UseItem(CombatParticipantData target)
     {
+        bool usable = false;
         foreach(EffectSO effect in effects)
         {
-            effect.ExecuteEffect(target);
+           usable |= effect.ExecuteEffect(target);
+           
         }
+        return usable;
+    }
+
+    public bool UseItem(List<CombatParticipantData> targets)
+    {
+        bool usable = false;
+
+        foreach (CombatParticipantData target in targets)
+        {
+            foreach (EffectSO effect in effects)
+            {
+                usable |= effect.ExecuteEffect(target);
+            }
+        }
+        return usable;
     }
 }
