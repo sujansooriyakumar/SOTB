@@ -13,12 +13,13 @@ public class UIPauseMenu : UIMenu
     [Header("Buttons")]
     [SerializeField] private Button inventoryButton;
     [SerializeField] private Button statusButton;
-
+    [SerializeField] private Button equipButton;
     private readonly List<GameObject> partyObjects = new();
 
     private void Awake()
     {
         inventoryButton.onClick.AddListener(() => UIController.Instance.Open<UIInventoryMenu>());
+        equipButton.onClick.AddListener(() => UIController.Instance.Open<UIEquipMenu>());
     }
 
     protected override void OnOpen()

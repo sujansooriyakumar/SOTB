@@ -59,6 +59,7 @@ public class CombatParticipantData
     public void CalculateSubstats()
     {
         stats.subStats[CombatStat.ATK] = CalculateAtk(equipmentData);
+        stats.subStats[CombatStat.MATK] = CalculateMAtk(equipmentData);
         stats.subStats[CombatStat.PDEF] = CalculatePDef(equipmentData);
         stats.subStats[CombatStat.MDEF] = CalculateMDef(equipmentData);
         stats.subStats[CombatStat.DODGE] = CalculateDodge(equipmentData);
@@ -77,6 +78,12 @@ public class CombatParticipantData
             return stats.GetStat(CombatStat.STR);
         attackStat = (float)weaponStats.Average(stats.GetStat) * (1f + equipmentData_.equippedWeapon.weaponStrength / 100f);
         return Mathf.CeilToInt(attackStat);
+    }
+
+    public int CalculateMAtk(EquipmentData equipmentData_)
+    {
+        float mAttackStat = stats.GetStat(CombatStat.INT) * (1f + equipmentData_.equippedWeapon.weaponStrength / 100f);
+        return Mathf.CeilToInt(mAttackStat);
     }
 
 

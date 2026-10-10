@@ -22,6 +22,7 @@ public class CombatStats
         baseStats.Add(CombatStat.LUK, config.LUK);
 
         subStats.Add(CombatStat.ATK, 0);
+        subStats.Add(CombatStat.MATK, 0);
         subStats.Add(CombatStat.PDEF, 0);
         subStats.Add(CombatStat.MDEF, 0);
         subStats.Add(CombatStat.HIT, 0);
@@ -56,6 +57,7 @@ public enum CombatStat
     AGI,
     LUK,
     ATK,
+    MATK,
     PDEF,
     MDEF,
     HIT,
