@@ -5,15 +5,15 @@ using UnityEngine;
 public class EquipmentData
 {
     public WeaponItemSO equippedWeapon;
-    public Dictionary<ArmorSlot, ArmorItemSO> equippedArmor = new();
+    public Dictionary<EquipmentSlot, EquipmentItemSO> equipment = new();
 
     public EquipmentData()
     {
-        equippedArmor.Add(ArmorSlot.HEAD, null);
-        equippedArmor.Add(ArmorSlot.CHEST, null);
-        equippedArmor.Add(ArmorSlot.ARMS, null);
-        equippedArmor.Add(ArmorSlot.LEGS, null);
-        equippedArmor.Add(ArmorSlot.ACCESSORY, null);
+        equipment.Add(EquipmentSlot.WEAPON, null);
+        equipment.Add(EquipmentSlot.HEAD, null);
+        equipment.Add(EquipmentSlot.CHEST, null);
+        equipment.Add(EquipmentSlot.ARMS, null);
+        equipment.Add(EquipmentSlot.ACCESSORY, null);
 
         equippedWeapon = null;
     }
@@ -26,13 +26,20 @@ public class EquipmentData
     public void EquipArmor(int armorToEquip)
     {
         ArmorItemSO armor = InventoryController.Instance.GetItemData(armorToEquip) as ArmorItemSO;
-        equippedArmor[armor.armorSlot] = armor;
+        equipment[armor.equipmentSlot] = armor;
     }
 
-    public void InitializeArmor(Dictionary<ArmorSlot, ArmorItemSO> armorToEquip)
+    public void EquipItem(int itemToEquip)
     {
-        equippedArmor = armorToEquip;
+        EquipmentItemSO equipmentItem = InventoryController.Instance.GetItemData(itemToEquip) as EquipmentItemSO;
+        equipment[equipmentItem.equipmentSlot] = equipmentItem;
     }
+
+    public void InitializeEquipment(Dictionary<EquipmentSlot, EquipmentItemSO> equipment_)
+    {
+        equipment = equipment_;
+    }
+
 }
 
 

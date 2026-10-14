@@ -16,6 +16,6 @@ MonoBehaviour:
   itemName: Leather Tunic
   itemDescription: A plain leather tunic.
   sellPrice: 20
+  equipmentSlot: 2
   PDEFRating: 7
   MDEFRating: 7
-  armorSlot: 1

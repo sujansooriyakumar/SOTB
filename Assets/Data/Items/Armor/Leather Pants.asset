@@ -16,6 +16,6 @@ MonoBehaviour:
   itemName: Leather Pants
   itemDescription: Plain leather pants
   sellPrice: 20
+  equipmentSlot: 4
   PDEFRating: 6
   MDEFRating: 6
-  armorSlot: 3

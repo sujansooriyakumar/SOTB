@@ -16,6 +16,6 @@ MonoBehaviour:
   itemName: Leather Gloves
   itemDescription: Plain leather gloves.
   sellPrice: 20
+  equipmentSlot: 3
   PDEFRating: 4
   MDEFRating: 4
-  armorSlot: 2

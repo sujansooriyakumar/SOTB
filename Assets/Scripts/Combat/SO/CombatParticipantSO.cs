@@ -25,9 +25,7 @@ public class CombatParticipantSO : SerializedScriptableObject
     [OdinSerialize]
     [DictionaryDrawerSettings(IsReadOnly = true, KeyLabel = "Slot", ValueLabel = "Armor",
                               DisplayMode = DictionaryDisplayOptions.OneLine)]
-    public Dictionary<ArmorSlot, ArmorItemSO> armor = CreateDefault();
-
-    public WeaponItemSO equippedWeapon;
+    public Dictionary<EquipmentSlot, EquipmentItemSO> equipment = CreateDefault();
  
 
     [Header("Weaknesses")]
@@ -38,18 +36,29 @@ public class CombatParticipantSO : SerializedScriptableObject
     public List<DamageType> typeResistances;
     public List<DamageAttribute> attributeResistances;
 
-    static Dictionary<ArmorSlot, ArmorItemSO> CreateDefault()
+    static Dictionary<EquipmentSlot, EquipmentItemSO> CreateDefault()
     {
-        var dict = new Dictionary<ArmorSlot, ArmorItemSO>();
-        foreach (ArmorSlot slot in Enum.GetValues(typeof(ArmorSlot)))
+        var dict = new Dictionary<EquipmentSlot, EquipmentItemSO>();
+        foreach (EquipmentSlot slot in Enum.GetValues(typeof(EquipmentSlot)))
             dict[slot] = null;
         return dict;
     }
 
     void OnValidate()
     {
-        armor ??= new Dictionary<ArmorSlot, ArmorItemSO>();
-        foreach (ArmorSlot slot in Enum.GetValues(typeof(ArmorSlot)))
-            if (!armor.ContainsKey(slot)) armor[slot] = null;
+        equipment ??= new Dictionary<EquipmentSlot, EquipmentItemSO>();
+
+        foreach (EquipmentSlot slot in Enum.GetValues(typeof(EquipmentSlot)))
+        {
+            if (!equipment.TryGetValue(slot, out var item))
+            {
+                equipment[slot] = null;
+            }
+            else if (item != null && item.equipmentSlot != slot)
+            {
+                Debug.LogWarning($"{item.name} goes in {item.equipmentSlot}, not {slot}. Cleared.", this);
+                equipment[slot] = null;
+            }
+        }
     }
 }

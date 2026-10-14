@@ -20,7 +20,105 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: equipment
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[EquipmentSlot, Assembly-CSharp],[EquipmentItemSO,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[EquipmentSlot, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 6
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 5
+    - Name: $v
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   character: {fileID: 11400000, guid: eae315fd0fcaa7341b616a0da760cd21, type: 2}
   maxHP: 10
   maxSP: 10
@@ -32,12 +130,6 @@ MonoBehaviour:
   DEX: 6
   AGI: 7
   LUK: 5
-  equippedWeapon: {fileID: 11400000, guid: dd40f953e867c8a409b10c379b3240d1, type: 2}
-  equippedArmor_helm: {fileID: 11400000, guid: c5b5ab7da90a02c4db38a99d81fbba43, type: 2}
-  equippedArmor_chest: {fileID: 11400000, guid: 9a0fe92278150b1488637b0490cb5cb4, type: 2}
-  equippedArmor_hands: {fileID: 11400000, guid: de8cc601349085b4fb7ad6fcf6c231c5, type: 2}
-  equippedArmor_legs: {fileID: 11400000, guid: 12aad762f88f6334f958343c7e83be62, type: 2}
-  equippedArmor_accessory: {fileID: 0}
   typeWeaknesses: 
   attributeWeaknesses: 
   typeResistances: 

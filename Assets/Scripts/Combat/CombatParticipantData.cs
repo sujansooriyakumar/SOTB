@@ -41,13 +41,13 @@ public class CombatParticipantData
         currentSP = maxSP;
 
         equipmentData = new EquipmentData();
-        equipmentData.InitializeArmor(config.armor);
+        equipmentData.InitializeEquipment(config.equipment);
 
-        if (config.equippedWeapon != null)
+      /*  if (config.equippedWeapon != null)
         {
             equipmentData.EquipWeapon(config.equippedWeapon.uID);
         }
-
+*/
         attributeResistances = config.attributeResistances;
         typeResistances = config.typeResistances;
 
@@ -69,30 +69,40 @@ public class CombatParticipantData
 
 
 
+    private static WeaponItemSO GetWeapon(EquipmentData equipmentData_)
+    {
+        if (equipmentData_?.equipment == null) return null;
+
+        return equipmentData_.equipment.TryGetValue(EquipmentSlot.WEAPON, out var item)
+            ? item as WeaponItemSO
+            : null;
+    }
+
     public int CalculateAtk(EquipmentData equipmentData_)
     {
-        var weaponStats = equipmentData_.equippedWeapon?.damageStat;
-        EquipmentData t = equipmentData_;
-        float attackStat = 0;
-        if (weaponStats == null || weaponStats.Length == 0)
+        WeaponItemSO weapon = GetWeapon(equipmentData_);
+        if (weapon == null || weapon.damageStat == null || weapon.damageStat.Length == 0)
             return stats.GetStat(CombatStat.STR);
-        attackStat = (float)weaponStats.Average(stats.GetStat) * (1f + equipmentData_.equippedWeapon.weaponStrength / 100f);
+
+        float attackStat = (float)weapon.damageStat.Average(stats.GetStat) * (1f + weapon.weaponStrength / 100f);
         return Mathf.CeilToInt(attackStat);
     }
 
     public int CalculateMAtk(EquipmentData equipmentData_)
     {
-        float mAttackStat = stats.GetStat(CombatStat.INT) * (1f + equipmentData_.equippedWeapon.weaponStrength / 100f);
-        return Mathf.CeilToInt(mAttackStat);
+        WeaponItemSO weapon = GetWeapon(equipmentData_);
+        float weaponBonus = weapon != null ? weapon.weaponStrength / 100f : 0f;
+
+        return Mathf.CeilToInt(stats.GetStat(CombatStat.INT) * (1f + weaponBonus));
     }
 
 
     public int CalculatePDef(EquipmentData equipmentData_)
     {
         float armorRating = 0f;
-        foreach (ArmorItemSO armor in equipmentData_.equippedArmor.Values)
+        foreach (var item in equipmentData_.equipment.Values)
         {
-            if (armor != null)
+            if (item is ArmorItemSO armor)
                 armorRating += armor.PDEFRating;
         }
 
@@ -102,9 +112,9 @@ public class CombatParticipantData
     public int CalculateMDef(EquipmentData equipmentData_)
     {
         float armorRating = 0f;
-        foreach (ArmorItemSO armor in equipmentData_.equippedArmor.Values)
+        foreach (var item in equipmentData_.equipment.Values)
         {
-            if (armor != null)
+            if (item is ArmorItemSO armor)
                 armorRating += armor.MDEFRating;
         }
 

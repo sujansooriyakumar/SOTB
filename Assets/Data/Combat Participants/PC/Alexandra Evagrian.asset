@@ -16,6 +16,7 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 26c503e65597c7a439d6915c825d052f, type: 2}
     - {fileID: 11400000, guid: c5b5ab7da90a02c4db38a99d81fbba43, type: 2}
     - {fileID: 11400000, guid: 9a0fe92278150b1488637b0490cb5cb4, type: 2}
     - {fileID: 11400000, guid: de8cc601349085b4fb7ad6fcf6c231c5, type: 2}
@@ -25,13 +26,13 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: armor
+    - Name: equipment
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[ArmorSlot, Assembly-CSharp],[ArmorItemSO,
+      Data: 0|System.Collections.Generic.Dictionary`2[[EquipmentSlot, Assembly-CSharp],[EquipmentItemSO,
         Assembly-CSharp]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[ArmorSlot, Assembly-CSharp]],
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[EquipmentSlot, Assembly-CSharp]],
         mscorlib
     - Name: 
       Entry: 12
@@ -44,7 +45,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 5
+      Data: 6
     - Name: 
       Entry: 7
       Data: 
@@ -100,6 +101,18 @@ MonoBehaviour:
       Entry: 3
       Data: 4
     - Name: $v
+      Entry: 10
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 5
+    - Name: $v
       Entry: 6
       Data: 
     - Name: 
@@ -122,7 +135,6 @@ MonoBehaviour:
   DEX: 109
   AGI: 97
   LUK: 136
-  equippedWeapon: {fileID: 11400000, guid: 26c503e65597c7a439d6915c825d052f, type: 2}
   typeWeaknesses: 
   attributeWeaknesses: 
   typeResistances: 
