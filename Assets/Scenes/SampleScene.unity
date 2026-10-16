@@ -2573,6 +2573,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 1442962338}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &343126817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2709,6 +2715,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 2089494073}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &355234982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18283,6 +18295,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 1418298241}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &405646477
 GameObject:
   m_ObjectHideFlags: 0
@@ -19156,6 +19174,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 35972160}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &490966317
 GameObject:
   m_ObjectHideFlags: 0
@@ -19757,7 +19781,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.738, y: -5.716, z: -14.6}
+  m_LocalPosition: {x: 6.5, y: -5.497, z: -14.746}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -20890,10 +20914,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryController
   itemDatabase: {fileID: 11400000, guid: c32c5336ee5922b40b6bf9d6a522bd49, type: 2}
-  weaponCompartmentList:
-  - uid: 200
+  weaponCompartmentList: []
+  armorCompartmentList:
+  - uid: 110
     qty: 1
-  armorCompartmentList: []
+  - uid: 111
+    qty: 1
+  - uid: 112
+    qty: 1
+  - uid: 113
+    qty: 1
   consumableCompartmentList: []
   questCompartmentList: []
 --- !u!4 &607712422
@@ -22028,6 +22058,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 1092396850}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &774747239
 GameObject:
   m_ObjectHideFlags: 0
@@ -23019,6 +23055,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 1012409453}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &901470349
 GameObject:
   m_ObjectHideFlags: 0
@@ -26100,6 +26142,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 151351117}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1163920456
 GameObject:
   m_ObjectHideFlags: 0
@@ -26423,6 +26471,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 501552021}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1172375363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26772,6 +26826,11 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!4 &1188048105 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 859014206375653675, guid: b24777d2c3c6a2d4e8f453bd0fa0e694, type: 3}
+  m_PrefabInstance: {fileID: 5631816226314307648}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1209024351
 GameObject:
   m_ObjectHideFlags: 0
@@ -26826,6 +26885,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 1123505972}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1209024354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26962,6 +27027,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 1770847661}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1212343938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27556,6 +27627,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 621477592}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1288069417
 GameObject:
   m_ObjectHideFlags: 0
@@ -27747,6 +27824,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 1797599934}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1320844048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29197,6 +29280,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 1088310390}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1442962338
 GameObject:
   m_ObjectHideFlags: 0
@@ -30189,6 +30278,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 491631715}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1623754014
 GameObject:
   m_ObjectHideFlags: 0
@@ -31336,6 +31431,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 1948941345}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1686414994
 GameObject:
   m_ObjectHideFlags: 0
@@ -31609,6 +31710,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 166451462}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1702243168
 GameObject:
   m_ObjectHideFlags: 0
@@ -32524,6 +32631,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 1242412295}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1807987361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33100,6 +33213,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 1940718836}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1915295645
 GameObject:
   m_ObjectHideFlags: 0
@@ -34965,7 +35084,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 0}
+    TrackingTarget: {fileID: 1188048105}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -34997,7 +35116,7 @@ Transform:
   m_GameObject: {fileID: 1994071154}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.738, y: -5.716, z: -14.6}
+  m_LocalPosition: {x: 6.5, y: -5.497, z: -14.746}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -35057,6 +35176,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIButton
   selectedObject: {fileID: 1607914264}
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2027221099
 MonoBehaviour:
   m_ObjectHideFlags: 0

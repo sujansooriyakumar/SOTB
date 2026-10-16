@@ -78,7 +78,10 @@ public class UIEquipMenu : UIMenu
         SetMode(slotMode: false);
 
     }
-
+    protected override void OnFocus()
+    {
+        if(selectedParticipant != null) statDisplay.UpdateDisplay(selectedParticipant.stats);
+    }
     protected override void OnClose()
     {
         foreach (CharacterDisplayButton button in partyButtons)
@@ -133,9 +136,16 @@ public class UIEquipMenu : UIMenu
         // Next step: open an item list for this slot, e.g.
         // UIController.Instance.Open<UIEquipItemList>(m => m.Setup(selectedParticipant, slotIndex));
         Debug.Log($"Chose slot {slotIndex} for {selectedParticipant}");
-        UIController.Instance.Open<UIEquipmentDisplay>(m => m.SetEquipmentType((EquipmentSlot)slotIndex));
-
+        UIEquipmentDisplay equipmentList = UIController.Instance.Open<UIEquipmentDisplay>(m => m.SetEquipmentType((EquipmentSlot)slotIndex));
+        equipmentList.onItemSelected += PreviewNewEquipment;
        
+    }
+
+    private void PreviewNewEquipment(InventoryItemData newEquipment)
+    {
+        Debug.Log("hello");
+        CombatStats newStats = selectedParticipant.PreviewStats(newEquipment);
+        statDisplay.UpdateDisplay(newStats);
     }
 
     private void PreviewPartyMember(CombatParticipantData participant)
@@ -149,7 +159,7 @@ public class UIEquipMenu : UIMenu
         armsArmorSlot.text = GetEquipmentName(equipmentData, EquipmentSlot.ARMS);
         accessorySlot.text = GetEquipmentName(equipmentData, EquipmentSlot.ACCESSORY);
 
-        statDisplay.UpdateDisplay(participant);
+        statDisplay.UpdateDisplay(participant.stats);
     }
 
     private string GetEquipmentName(EquipmentData equipmentData, EquipmentSlot slot)

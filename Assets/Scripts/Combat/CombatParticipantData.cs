@@ -53,18 +53,27 @@ public class CombatParticipantData
 
         attributeWeaknesses = config.attributeWeaknesses;
         typeWeaknesses = config.typeWeaknesses;
-        CalculateSubstats();
+        CalculateSubstats(stats, equipmentData);
     }
 
-    public void CalculateSubstats()
+    public void CalculateSubstats(CombatStats stats_, EquipmentData equipmentData_)
     {
-        stats.subStats[CombatStat.ATK] = CalculateAtk(equipmentData);
-        stats.subStats[CombatStat.MATK] = CalculateMAtk(equipmentData);
-        stats.subStats[CombatStat.PDEF] = CalculatePDef(equipmentData);
-        stats.subStats[CombatStat.MDEF] = CalculateMDef(equipmentData);
-        stats.subStats[CombatStat.DODGE] = CalculateDodge(equipmentData);
-        stats.subStats[CombatStat.HIT] = CalculateHit(equipmentData);
-        stats.subStats[CombatStat.CRIT] = CalculateCrit(equipmentData);
+        stats_.stats[CombatStat.ATK] = CalculateAtk(equipmentData_);
+        stats_.stats[CombatStat.MATK] = CalculateMAtk(equipmentData_);
+        stats_.stats[CombatStat.PDEF] = CalculatePDef(equipmentData_);
+        stats_.stats[CombatStat.MDEF] = CalculateMDef(equipmentData_);
+        stats_.stats[CombatStat.DODGE] = CalculateDodge(equipmentData_);
+        stats_.stats[CombatStat.HIT] = CalculateHit(equipmentData_);
+        stats_.stats[CombatStat.CRIT] = CalculateCrit(equipmentData_);
+    }
+
+    public CombatStats PreviewStats(InventoryItemData newEquip)
+    {
+        CombatStats newStats = stats.CopyStats();
+        EquipmentData newEquipData = equipmentData.CopyEquipement();
+        newEquipData.EquipItem(newEquip.uid);
+        CalculateSubstats(newStats, newEquipData);
+        return newStats;
     }
 
 

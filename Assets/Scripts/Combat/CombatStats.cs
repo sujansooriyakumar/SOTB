@@ -8,38 +8,46 @@ using UnityEngine;
 [Serializable]
 public class CombatStats
 {
-    [OdinSerialize] public Dictionary<CombatStat, int> baseStats = new();
-    [OdinSerialize] public Dictionary<CombatStat, int> subStats = new();
+    [OdinSerialize] public Dictionary<CombatStat, int> stats = new();
 
     public CombatStats(CombatParticipantSO config)
     {
-        baseStats.Add(CombatStat.STR, config.STR);
-        baseStats.Add(CombatStat.DEF, config.DEF);
-        baseStats.Add(CombatStat.INT, config.INT);
-        baseStats.Add(CombatStat.SPI, config.SPI);
-        baseStats.Add(CombatStat.DEX, config.DEX);
-        baseStats.Add(CombatStat.AGI, config.AGI);
-        baseStats.Add(CombatStat.LUK, config.LUK);
+        stats.Add(CombatStat.STR, config.STR);
+        stats.Add(CombatStat.DEF, config.DEF);
+        stats.Add(CombatStat.INT, config.INT);
+        stats.Add(CombatStat.SPI, config.SPI);
+        stats.Add(CombatStat.DEX, config.DEX);
+        stats.Add(CombatStat.AGI, config.AGI);
+        stats.Add(CombatStat.LUK, config.LUK);
 
-        subStats.Add(CombatStat.ATK, 0);
-        subStats.Add(CombatStat.MATK, 0);
-        subStats.Add(CombatStat.PDEF, 0);
-        subStats.Add(CombatStat.MDEF, 0);
-        subStats.Add(CombatStat.HIT, 0);
-        subStats.Add(CombatStat.DODGE, 0);
-        subStats.Add(CombatStat.CRIT, 0);
+        stats.Add(CombatStat.ATK, 0);
+        stats.Add(CombatStat.MATK, 0);
+        stats.Add(CombatStat.PDEF, 0);
+        stats.Add(CombatStat.MDEF, 0);
+        stats.Add(CombatStat.HIT, 0);
+        stats.Add(CombatStat.DODGE, 0);
+        stats.Add(CombatStat.CRIT, 0);
+    }
+
+    public CombatStats()
+    {
+        stats = new Dictionary<CombatStat, int>();
     }
 
     public int GetStat(CombatStat stat)
     {
-        if (baseStats.ContainsKey(stat))
+        return stats[stat];
+    }
+
+    public CombatStats CopyStats()
+    {
+        CombatStats copy = new CombatStats();
+        foreach(KeyValuePair<CombatStat, int> pair in stats)
         {
-            return baseStats[stat];
+            copy.stats.Add(pair.Key, pair.Value);
         }
-        else
-        {
-            return subStats[stat];
-        }
+
+        return copy;
     }
 
 

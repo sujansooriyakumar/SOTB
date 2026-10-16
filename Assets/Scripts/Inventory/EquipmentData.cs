@@ -18,6 +18,16 @@ public class EquipmentData
         equippedWeapon = null;
     }
 
+    public EquipmentData CopyEquipement()
+    {
+        EquipmentData copy = new();
+        foreach(KeyValuePair<EquipmentSlot, EquipmentItemSO> kvp in equipment)
+        {
+            copy.equipment[kvp.Key] = kvp.Value;
+        }
+        return copy;
+    }
+
     public void EquipWeapon(int weaponToEquip)
     {
         equippedWeapon = InventoryController.Instance.GetItemData(weaponToEquip) as WeaponItemSO;

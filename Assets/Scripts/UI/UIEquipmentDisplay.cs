@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // Lists the inventory items that fit one equipment slot.
@@ -16,7 +17,7 @@ public class UIEquipmentDisplay : UIMenu
     private readonly List<Button> itemButtons = new();
     private EquipmentSlot slot;
     private Action<InventoryItemData> onItemChosen;
-
+    public Action<InventoryItemData> onItemSelected;
     // Called through Open's setup callback, before the menu opens.
     // The list itself is built in OnOpen.
     public void SetEquipmentType(EquipmentSlot equipmentSlot, Action<InventoryItemData> onChosen = null)
@@ -27,6 +28,9 @@ public class UIEquipmentDisplay : UIMenu
 
     protected override void OnOpen()
     {
+        GameObject defaultObject = Instantiate(itemPrefab, itemParent);
+        defaultObject.GetComponentInChildren<TMP_Text>().text = "---";
+        itemButtons.Add(defaultObject.GetComponent<Button>());
         foreach (InventoryItemData item in GetItemsForSlot(slot))
         {
             ItemSO itemSO = InventoryController.Instance.GetItemData(item.uid);
@@ -38,10 +42,10 @@ public class UIEquipmentDisplay : UIMenu
             {
                 InventoryItemData chosen = item;
                 button.onClick.AddListener(() => onItemChosen?.Invoke(chosen));
+                button.GetComponent<UIButton>().onSelect.AddListener(() => onItemSelected?.Invoke(chosen));
                 itemButtons.Add(button);
             }
         }
-
         SetVerticalNavigation(itemButtons);
     }
 
@@ -53,9 +57,10 @@ public class UIEquipmentDisplay : UIMenu
             button.gameObject.SetActive(false);
             Destroy(button.gameObject);
         }
-
         itemButtons.Clear();
         onItemChosen = null;
+        onItemSelected = null;
+
     }
 
     // Focus() selects this when the menu opens, so the first item starts selected.

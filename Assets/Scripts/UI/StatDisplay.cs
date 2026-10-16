@@ -34,9 +34,8 @@ public class StatDisplay : MonoBehaviour
 
     [SerializeField] private TMP_Text CRITValue;
 
-    public void UpdateDisplay(CombatParticipantData combatData)
+    public void UpdateDisplay(CombatStats stats)
     {
-        CombatStats stats = combatData.stats;
 
         STRValue.text = stats.GetStat(CombatStat.STR).ToString();
         INTValue.text = stats.GetStat(CombatStat.INT).ToString();
