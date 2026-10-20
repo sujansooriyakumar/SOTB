@@ -1,3 +1,6 @@
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -24,14 +27,16 @@ public class UIEquipMenu : UIMenu
     [SerializeField] private GameObject buttonPrefab;
 
     [Header("Equipment Slots")]
-    [Tooltip("In order: weapon, head, chest, legs, arms, accessory.")]
-    [SerializeField] private Button[] slotButtons;
-    [SerializeField] private TMP_Text weaponSlot;
-    [SerializeField] private TMP_Text headArmorSlot;
-    [SerializeField] private TMP_Text chestArmorSlot;
-    [SerializeField] private TMP_Text legsArmorSlot;
-    [SerializeField] private TMP_Text armsArmorSlot;
-    [SerializeField] private TMP_Text accessorySlot;
+    [Tooltip("In order: weapon, head, chest, legs, arms, accessoy.")]
+    //[SerializeField] private Button[] slotButtons;
+    public List<EquipmentSlotDisplay> slotDisplays = new();
+    Button[] slotButtons;
+    /*    [SerializeField] private TMP_Text weaponSlot;
+        [SerializeField] private TMP_Text headArmorSlot;
+        [SerializeField] private TMP_Text chestArmorSlot;
+        [SerializeField] private TMP_Text legsArmorSlot;
+        [SerializeField] private TMP_Text armsArmorSlot;
+        [SerializeField] private TMP_Text accessorySlot;*/
 
     [Header("Stats")]
     [SerializeField] private StatDisplay statDisplay;
@@ -43,11 +48,16 @@ public class UIEquipMenu : UIMenu
 
     private void Awake()
     {
-        for (int i = 0; i < slotButtons.Length; i++)
+        slotButtons = new Button[slotDisplays.Count];
+
+        int i = 0;
+        foreach(EquipmentSlotDisplay slotDisplay in slotDisplays)
         {
-            int slotIndex = i;
-            slotButtons[i].onClick.AddListener(() => OnSlotChosen(slotIndex));
+            slotDisplay.button.onClick.AddListener(() => OnSlotChosen(slotDisplay.slot));
+            slotButtons[i] = slotDisplay.button;
+            i++;
         }
+      
 
         SetVerticalNavigation(slotButtons);
     }
@@ -131,44 +141,63 @@ public class UIEquipMenu : UIMenu
         slotPanelGroup.alpha = slotMode ? 1f : inactivePanelAlpha;
     }
 
-    private void OnSlotChosen(int slotIndex)
+    private void OnSlotChosen(EquipmentSlot slotIndex)
     {
         // Next step: open an item list for this slot, e.g.
         // UIController.Instance.Open<UIEquipItemList>(m => m.Setup(selectedParticipant, slotIndex));
         Debug.Log($"Chose slot {slotIndex} for {selectedParticipant}");
-        UIEquipmentDisplay equipmentList = UIController.Instance.Open<UIEquipmentDisplay>(m => m.SetEquipmentType((EquipmentSlot)slotIndex));
+        UIEquipmentDisplay equipmentList = UIController.Instance.Open<UIEquipmentDisplay>(m => m.SetEquipmentType(slotIndex, selectedParticipant.equipmentData.equipment[slotIndex]));
         equipmentList.onItemSelected += PreviewNewEquipment;
        
     }
 
-    private void PreviewNewEquipment(InventoryItemData newEquipment)
+    private void PreviewNewEquipment(int newEquipment, EquipmentSlot slot)
     {
-        Debug.Log("hello");
-        CombatStats newStats = selectedParticipant.PreviewStats(newEquipment);
-        statDisplay.UpdateDisplay(newStats);
+        CombatStats newStats = selectedParticipant.PreviewStats(newEquipment, slot);
+        statDisplay.PreviewStats(newStats);
     }
 
     private void PreviewPartyMember(CombatParticipantData participant)
     {
         EquipmentData equipmentData = participant.equipmentData;
 
-        weaponSlot.text = GetEquipmentName(equipmentData, EquipmentSlot.WEAPON);
+       /* weaponSlot.text = GetEquipmentName(equipmentData, EquipmentSlot.WEAPON);
         headArmorSlot.text = GetEquipmentName(equipmentData, EquipmentSlot.HEAD);
         chestArmorSlot.text = GetEquipmentName(equipmentData, EquipmentSlot.CHEST);
         legsArmorSlot.text = GetEquipmentName(equipmentData, EquipmentSlot.LEGS);
         armsArmorSlot.text = GetEquipmentName(equipmentData, EquipmentSlot.ARMS);
-        accessorySlot.text = GetEquipmentName(equipmentData, EquipmentSlot.ACCESSORY);
+        accessorySlot.text = GetEquipmentName(equipmentData, EquipmentSlot.ACCESSORY);*/
+
+       for(int i = 0; i < slotDisplays.Count; i++)
+        {
+            EquipmentSlotDisplay display = slotDisplays[i];
+            EquipmentItemSO item = GetEquippedItem(equipmentData, display.slot);
+            display.equippedItem = item != null ? item.uID : -1;
+            slotDisplays[i] = display;
+            display.button.GetComponentInChildren<TMP_Text>().text =
+                item != null ? item.itemName : "---";
+            
+        }
 
         statDisplay.UpdateDisplay(participant.stats);
     }
+    private EquipmentItemSO GetEquippedItem(EquipmentData equipmentData, EquipmentSlot slot)
+    {
+        if (equipmentData?.equipment != null
+            && equipmentData.equipment.TryGetValue(slot, out var item))
+        {
+            return item >= 0? InventoryController.Instance.GetItemData(item) as EquipmentItemSO : null;
+        }
 
+        return null;
+    }
     private string GetEquipmentName(EquipmentData equipmentData, EquipmentSlot slot)
     {
         if (equipmentData?.equipment != null
             && equipmentData.equipment.TryGetValue(slot, out var item)
-            && item != null)
+            && item >= 0)
         {
-            return item.itemName;
+            return InventoryController.Instance.GetItemData(item).itemName;
         }
 
         return EmptySlotText;
@@ -187,4 +216,12 @@ public class UIEquipMenu : UIMenu
             };
         }
     }
+}
+
+[Serializable]
+public struct EquipmentSlotDisplay
+{
+    public EquipmentSlot slot;
+    public int equippedItem;
+    public Button button;
 }

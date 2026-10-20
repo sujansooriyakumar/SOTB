@@ -276,6 +276,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0438a0d10858ba04695c0721edea7602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChoicePrompt
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   firstSelected: {fileID: 1209024351}
   fadeDuration: 0
   yesButton: {fileID: 1212343938}
@@ -1643,6 +1652,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad4b6f30b00492448afb4bb606013769, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIEquipmentDisplay
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: onItemSelected
+      Entry: 6
+      Data: 
   firstSelected: {fileID: 0}
   fadeDuration: 0.2
   itemPrefab: {fileID: 1610279330228487080, guid: 316fe68f615ce44409446871353af892, type: 3}
@@ -19285,6 +19306,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f85139b83c1805644bd73b37e75f944d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIEquipMenu
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   firstSelected: {fileID: 0}
   fadeDuration: 0
   characterListGroup: {fileID: 986526913}
@@ -19292,19 +19322,25 @@ MonoBehaviour:
   inactivePanelAlpha: 0.5
   partyButtonParent: {fileID: 986526911}
   buttonPrefab: {fileID: 1741703598428696830, guid: 90723b08a1edaca4ca397a7dc8e1aaaf, type: 3}
-  slotButtons:
-  - {fileID: 485637872}
-  - {fileID: 1439704087}
-  - {fileID: 1692353258}
-  - {fileID: 772240277}
-  - {fileID: 1673646850}
-  - {fileID: 1144350780}
-  weaponSlot: {fileID: 485637873}
-  headArmorSlot: {fileID: 1439704088}
-  chestArmorSlot: {fileID: 1692353259}
-  legsArmorSlot: {fileID: 772240278}
-  armsArmorSlot: {fileID: 1673646851}
-  accessorySlot: {fileID: 1144350781}
+  slotDisplays:
+  - slot: 0
+    equippedItem: 0
+    button: {fileID: 485637872}
+  - slot: 1
+    equippedItem: 0
+    button: {fileID: 1439704087}
+  - slot: 2
+    equippedItem: 0
+    button: {fileID: 1692353258}
+  - slot: 3
+    equippedItem: 0
+    button: {fileID: 1673646850}
+  - slot: 4
+    equippedItem: 0
+    button: {fileID: 772240277}
+  - slot: 5
+    equippedItem: 0
+    button: {fileID: 1144350780}
   statDisplay: {fileID: 1412173069}
 --- !u!1 &491631715
 GameObject:
@@ -19756,7 +19792,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 0
-  orthographic size: 9.770045
+  orthographic size: 5.7708335
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -22392,6 +22428,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89a3bfc4c16eed246b7115cdf13c4a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogDisplay
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   firstSelected: {fileID: 0}
   fadeDuration: 0
   dialogText: {fileID: 1590147037}
@@ -22478,8 +22523,8 @@ RectTransform:
   - {fileID: 485637871}
   - {fileID: 1439704086}
   - {fileID: 1692353257}
-  - {fileID: 772240276}
   - {fileID: 1673646849}
+  - {fileID: 772240276}
   - {fileID: 1144350779}
   m_Father: {fileID: 490966318}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -23369,6 +23414,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6d064dd50023a48aeb39051c575af1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIItemContextMenu
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   firstSelected: {fileID: 403264830}
   fadeDuration: 0
   useButton: {fileID: 403264832}
@@ -25925,6 +25979,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35807afd05d90f947b81ed02d7aac892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIInventoryMenu
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   firstSelected: {fileID: 0}
   fadeDuration: 0.15
   inventoryButtonParent: {fileID: 3487995}
@@ -26318,6 +26381,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 909a8bc1ec2ea8943a21a9f7c64b4f5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIItemTargetSelect
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   firstSelected: {fileID: 0}
   fadeDuration: 0
   buttonPrefab: {fileID: 688296904244989260, guid: 589ebc49120cc2344bfdd0d0ca862157, type: 3}
@@ -27966,6 +28038,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f63ecfbe032e3a449e8669f4d8b0d8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuantityPicker
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   firstSelected: {fileID: 0}
   fadeDuration: 0
   promptText: {fileID: 1051998045}
@@ -28857,20 +28938,223 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afc65e9fa14b46e499bc677328c7de22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StatDisplay
-  STRValue: {fileID: 2146416483}
-  INTValue: {fileID: 1781505616}
-  DEXValue: {fileID: 1665246132}
-  DEFValue: {fileID: 1424817049}
-  SPIValue: {fileID: 671881026}
-  AGIValue: {fileID: 141309997}
-  LUKValue: {fileID: 1017989290}
-  ATKValue: {fileID: 1163920458}
-  MATKValue: {fileID: 780901511}
-  PDEFValue: {fileID: 2075651562}
-  MDEFValue: {fileID: 778083845}
-  HITValue: {fileID: 774747241}
-  DODGEValue: {fileID: 1702243170}
-  CRITValue: {fileID: 732418889}
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 2146416483}
+    - {fileID: 1424817049}
+    - {fileID: 1781505616}
+    - {fileID: 671881026}
+    - {fileID: 1665246132}
+    - {fileID: 141309997}
+    - {fileID: 1017989290}
+    - {fileID: 1163920458}
+    - {fileID: 780901511}
+    - {fileID: 2075651562}
+    - {fileID: 778083845}
+    - {fileID: 774747241}
+    - {fileID: 1702243170}
+    - {fileID: 732418889}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: statDisplays
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[CombatStat, Assembly-CSharp],[TMPro.TMP_Text,
+        Unity.TextMeshPro]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[CombatStat, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 14
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 10
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 5
+    - Name: $v
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 6
+    - Name: $v
+      Entry: 10
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 7
+    - Name: $v
+      Entry: 10
+      Data: 7
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 8
+    - Name: $v
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 9
+    - Name: $v
+      Entry: 10
+      Data: 9
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 10
+    - Name: $v
+      Entry: 10
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 11
+    - Name: $v
+      Entry: 10
+      Data: 11
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 12
+    - Name: $v
+      Entry: 10
+      Data: 12
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 13
+    - Name: $v
+      Entry: 10
+      Data: 13
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &1418298241
 GameObject:
   m_ObjectHideFlags: 0
@@ -30450,6 +30734,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e41c2e514990dfd4db78af97633a4a2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIPauseMenu
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   firstSelected: {fileID: 1282798328}
   fadeDuration: 0.15
   frontlineParent: {fileID: 1262621879}

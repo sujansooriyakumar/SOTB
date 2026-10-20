@@ -5,15 +5,16 @@ using UnityEngine;
 public class EquipmentData
 {
     public WeaponItemSO equippedWeapon;
-    public Dictionary<EquipmentSlot, EquipmentItemSO> equipment = new();
+    public Dictionary<EquipmentSlot, int> equipment = new();
 
     public EquipmentData()
     {
-        equipment.Add(EquipmentSlot.WEAPON, null);
-        equipment.Add(EquipmentSlot.HEAD, null);
-        equipment.Add(EquipmentSlot.CHEST, null);
-        equipment.Add(EquipmentSlot.ARMS, null);
-        equipment.Add(EquipmentSlot.ACCESSORY, null);
+        equipment.Add(EquipmentSlot.WEAPON, -1);
+        equipment.Add(EquipmentSlot.HEAD, -1);
+        equipment.Add(EquipmentSlot.CHEST, -1);
+        equipment.Add(EquipmentSlot.ARMS, -1);
+        equipment.Add(EquipmentSlot.LEGS, -1);
+        equipment.Add(EquipmentSlot.ACCESSORY, -1);
 
         equippedWeapon = null;
     }
@@ -21,7 +22,7 @@ public class EquipmentData
     public EquipmentData CopyEquipement()
     {
         EquipmentData copy = new();
-        foreach(KeyValuePair<EquipmentSlot, EquipmentItemSO> kvp in equipment)
+        foreach(KeyValuePair<EquipmentSlot, int> kvp in equipment)
         {
             copy.equipment[kvp.Key] = kvp.Value;
         }
@@ -35,19 +36,28 @@ public class EquipmentData
 
     public void EquipArmor(int armorToEquip)
     {
-        ArmorItemSO armor = InventoryController.Instance.GetItemData(armorToEquip) as ArmorItemSO;
-        equipment[armor.equipmentSlot] = armor;
+       // equipment[armor.equipmentSlot] = armorToEquip;
     }
 
     public void EquipItem(int itemToEquip)
     {
         EquipmentItemSO equipmentItem = InventoryController.Instance.GetItemData(itemToEquip) as EquipmentItemSO;
-        equipment[equipmentItem.equipmentSlot] = equipmentItem;
+        equipment[equipmentItem.equipmentSlot] = itemToEquip;
     }
 
+    public void RemoveItem(EquipmentSlot slot)
+    {
+        equipment[slot] = -1;
+    }
     public void InitializeEquipment(Dictionary<EquipmentSlot, EquipmentItemSO> equipment_)
     {
-        equipment = equipment_;
+        foreach (KeyValuePair<EquipmentSlot, EquipmentItemSO> kvp in equipment_)
+        {
+            if (kvp.Value != null)
+            {
+                equipment[kvp.Key] = kvp.Value.uID;
+            }
+        }
     }
 
 }

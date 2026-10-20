@@ -67,12 +67,19 @@ public class CombatParticipantData
         stats_.stats[CombatStat.CRIT] = CalculateCrit(equipmentData_);
     }
 
-    public CombatStats PreviewStats(InventoryItemData newEquip)
+    public CombatStats PreviewStats(int newEquip, EquipmentSlot slot)
     {
         CombatStats newStats = stats.CopyStats();
         EquipmentData newEquipData = equipmentData.CopyEquipement();
-        newEquipData.EquipItem(newEquip.uid);
-        CalculateSubstats(newStats, newEquipData);
+        if (newEquip >= 0)
+        {
+            newEquipData.EquipItem(newEquip);
+        }
+        else
+        {
+            newEquipData.RemoveItem(slot);
+        }
+            CalculateSubstats(newStats, newEquipData);
         return newStats;
     }
 
@@ -81,9 +88,9 @@ public class CombatParticipantData
     private static WeaponItemSO GetWeapon(EquipmentData equipmentData_)
     {
         if (equipmentData_?.equipment == null) return null;
-
-        return equipmentData_.equipment.TryGetValue(EquipmentSlot.WEAPON, out var item)
-            ? item as WeaponItemSO
+      
+        return equipmentData_.equipment.TryGetValue(EquipmentSlot.WEAPON, out var item) && item >= 0
+            ? InventoryController.Instance.GetItemData(item) as WeaponItemSO
             : null;
     }
 
@@ -111,7 +118,7 @@ public class CombatParticipantData
         float armorRating = 0f;
         foreach (var item in equipmentData_.equipment.Values)
         {
-            if (item is ArmorItemSO armor)
+            if (item >= 0 && InventoryController.Instance.GetItemData(item) is ArmorItemSO armor)
                 armorRating += armor.PDEFRating;
         }
 
@@ -123,7 +130,7 @@ public class CombatParticipantData
         float armorRating = 0f;
         foreach (var item in equipmentData_.equipment.Values)
         {
-            if (item is ArmorItemSO armor)
+            if (item >= 0 && InventoryController.Instance.GetItemData(item) is ArmorItemSO armor)
                 armorRating += armor.MDEFRating;
         }
 

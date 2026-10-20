@@ -1,57 +1,53 @@
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
+using System.Collections.Generic;
 using System.Text;
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
-public class StatDisplay : MonoBehaviour
+public class StatDisplay : SerializedMonoBehaviour
 {
-    [Header("Base Stats")]
-    [SerializeField] private TMP_Text STRValue;
 
-    [SerializeField] private TMP_Text INTValue;
+    [OdinSerialize]
+    [ShowInInspector]
+    public Dictionary<CombatStat, TMP_Text> statDisplays = new();
+    private Color defaultColor;
 
-    [SerializeField] private TMP_Text DEXValue;
+    private CombatStats statReference;
 
-    [SerializeField] private TMP_Text DEFValue;
-
-    [SerializeField] private TMP_Text SPIValue;
-
-    [SerializeField] private TMP_Text AGIValue;
-
-    [SerializeField] private TMP_Text LUKValue;
-
-    [Header("Substats")]
-    [SerializeField] private TMP_Text ATKValue;
-
-    [SerializeField] private TMP_Text MATKValue;
-
-    [SerializeField] private TMP_Text PDEFValue;
-
-    [SerializeField] private TMP_Text MDEFValue;
-
-    [SerializeField] private TMP_Text HITValue;
-
-    [SerializeField] private TMP_Text DODGEValue;
-
-    [SerializeField] private TMP_Text CRITValue;
-
+    private void OnEnable()
+    {
+        defaultColor = statDisplays[CombatStat.STR].color;
+    }
     public void UpdateDisplay(CombatStats stats)
     {
+        foreach(KeyValuePair<CombatStat, int> kvp in stats.stats)
+        {
+            statDisplays[kvp.Key].text = kvp.Value.ToString();
+            statDisplays[kvp.Key].color = defaultColor;
+        }
 
-        STRValue.text = stats.GetStat(CombatStat.STR).ToString();
-        INTValue.text = stats.GetStat(CombatStat.INT).ToString();
-        DEXValue.text = stats.GetStat(CombatStat.DEX).ToString();
-        DEFValue.text = stats.GetStat(CombatStat.DEF).ToString();
-        SPIValue.text = stats.GetStat(CombatStat.SPI).ToString();
-        AGIValue.text = stats.GetStat(CombatStat.AGI).ToString();
-        LUKValue.text = stats.GetStat(CombatStat.LUK).ToString();
+        statReference = stats;
+    }
 
-        // substats
-        ATKValue.text = stats.GetStat(CombatStat.ATK).ToString();
-        MATKValue.text = stats.GetStat(CombatStat.MATK).ToString();
-        PDEFValue.text = stats.GetStat(CombatStat.PDEF).ToString();
-        MDEFValue.text = stats.GetStat(CombatStat.MDEF).ToString();
-        HITValue.text = stats.GetStat(CombatStat.HIT).ToString();
-        DODGEValue.text = stats.GetStat(CombatStat.DODGE).ToString();
-        CRITValue.text = stats.GetStat(CombatStat.CRIT).ToString();
+    public void PreviewStats(CombatStats newStats)
+    {
+        foreach(KeyValuePair<CombatStat, int> kvp in newStats.stats)
+        {
+            statDisplays[kvp.Key].text = kvp.Value.ToString();
+            if(kvp.Value > statReference.stats[kvp.Key])
+            {
+                statDisplays[kvp.Key].color = Color.green;
+            }
+            if (kvp.Value < statReference.stats[kvp.Key])
+            {
+                statDisplays[kvp.Key].color = Color.red;
+            }
+            if(kvp.Value == statReference.stats[kvp.Key])
+            {
+                statDisplays[kvp.Key].color = defaultColor;
+            }
+        }
     }
 }

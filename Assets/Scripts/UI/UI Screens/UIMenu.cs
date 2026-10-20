@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine.Serialization;
 // A CanvasGroup lets one flag toggle every Selectable under the menu,
 // so menus don't need to keep a list of buttons just to disable them.
 [RequireComponent(typeof(CanvasGroup))]
-public abstract class UIMenu : MonoBehaviour
+public abstract class UIMenu : SerializedMonoBehaviour
 {
     [Tooltip("Selected when the menu opens, or when the remembered selection no longer exists.")]
     [FormerlySerializedAs("firstItem")]

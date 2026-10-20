@@ -16,20 +16,30 @@ public class UIEquipmentDisplay : UIMenu
 
     private readonly List<Button> itemButtons = new();
     private EquipmentSlot slot;
+    private int equipped;
     private Action<InventoryItemData> onItemChosen;
-    public Action<InventoryItemData> onItemSelected;
+    public Action<int, EquipmentSlot> onItemSelected;
     // Called through Open's setup callback, before the menu opens.
     // The list itself is built in OnOpen.
-    public void SetEquipmentType(EquipmentSlot equipmentSlot, Action<InventoryItemData> onChosen = null)
+    public void SetEquipmentType(EquipmentSlot equipmentSlot, int equipped_ ,Action<InventoryItemData> onChosen = null)
     {
         slot = equipmentSlot;
         onItemChosen = onChosen;
+        equipped = equipped_;
     }
 
     protected override void OnOpen()
     {
+        GameObject cancelButton = Instantiate(itemPrefab, itemParent);
+        cancelButton.GetComponentInChildren<TMP_Text>().text = "Cancel";
+        cancelButton.GetComponent<Button>().onClick.AddListener(() => UIController.Instance.Close(this));
+        cancelButton.GetComponent<UIButton>().onSelect.AddListener(() => onItemSelected?.Invoke(equipped, slot));
+
         GameObject defaultObject = Instantiate(itemPrefab, itemParent);
         defaultObject.GetComponentInChildren<TMP_Text>().text = "---";
+        defaultObject.GetComponent<UIButton>().onSelect.AddListener(() => onItemSelected?.Invoke(-1, slot));
+
+        itemButtons.Add(cancelButton.GetComponent<Button>());
         itemButtons.Add(defaultObject.GetComponent<Button>());
         foreach (InventoryItemData item in GetItemsForSlot(slot))
         {
@@ -42,7 +52,7 @@ public class UIEquipmentDisplay : UIMenu
             {
                 InventoryItemData chosen = item;
                 button.onClick.AddListener(() => onItemChosen?.Invoke(chosen));
-                button.GetComponent<UIButton>().onSelect.AddListener(() => onItemSelected?.Invoke(chosen));
+                button.GetComponent<UIButton>().onSelect.AddListener(() => onItemSelected?.Invoke(chosen.uid, slot));
                 itemButtons.Add(button);
             }
         }
