@@ -5,9 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// Lists the inventory items that fit one equipment slot.
-// Open it with:
-//   UIController.Instance.Open<UIEquipmentDisplay>(m => m.SetEquipmentType(slot, OnItemChosen));
+
 public class UIEquipmentDisplay : UIMenu
 {
     [SerializeField] private GameObject itemPrefab;
@@ -17,11 +15,10 @@ public class UIEquipmentDisplay : UIMenu
     private readonly List<Button> itemButtons = new();
     private EquipmentSlot slot;
     private int equipped;
-    private Action<InventoryItemData> onItemChosen;
+    public Action<int> onItemChosen;
     public Action<int, EquipmentSlot> onItemSelected;
-    // Called through Open's setup callback, before the menu opens.
-    // The list itself is built in OnOpen.
-    public void SetEquipmentType(EquipmentSlot equipmentSlot, int equipped_ ,Action<InventoryItemData> onChosen = null)
+
+    public void SetEquipmentType(EquipmentSlot equipmentSlot, int equipped_ ,Action<int> onChosen = null)
     {
         slot = equipmentSlot;
         onItemChosen = onChosen;
@@ -38,7 +35,7 @@ public class UIEquipmentDisplay : UIMenu
         GameObject defaultObject = Instantiate(itemPrefab, itemParent);
         defaultObject.GetComponentInChildren<TMP_Text>().text = "---";
         defaultObject.GetComponent<UIButton>().onSelect.AddListener(() => onItemSelected?.Invoke(-1, slot));
-
+        defaultObject.GetComponent<Button>().onClick.AddListener(() => onItemChosen?.Invoke(-1));
         itemButtons.Add(cancelButton.GetComponent<Button>());
         itemButtons.Add(defaultObject.GetComponent<Button>());
         foreach (InventoryItemData item in GetItemsForSlot(slot))
@@ -51,7 +48,7 @@ public class UIEquipmentDisplay : UIMenu
             if (buttonObject.TryGetComponent(out Button button))
             {
                 InventoryItemData chosen = item;
-                button.onClick.AddListener(() => onItemChosen?.Invoke(chosen));
+                button.onClick.AddListener(() => onItemChosen?.Invoke(chosen.uid));
                 button.GetComponent<UIButton>().onSelect.AddListener(() => onItemSelected?.Invoke(chosen.uid, slot));
                 itemButtons.Add(button);
             }
@@ -63,7 +60,6 @@ public class UIEquipmentDisplay : UIMenu
     {
         foreach (Button button in itemButtons)
         {
-            // Deactivate first: Destroy is deferred to the end of the frame.
             button.gameObject.SetActive(false);
             Destroy(button.gameObject);
         }
@@ -73,7 +69,6 @@ public class UIEquipmentDisplay : UIMenu
 
     }
 
-    // Focus() selects this when the menu opens, so the first item starts selected.
     protected override GameObject GetDefaultSelection() =>
         itemButtons.Count > 0 ? itemButtons[0].gameObject : null;
 
@@ -83,7 +78,6 @@ public class UIEquipmentDisplay : UIMenu
             ? InventoryController.Instance.weaponCompartmentList
             : InventoryController.Instance.armorCompartmentList;
 
-        // A new list, so nothing here can modify the inventory's own lists.
         List<InventoryItemData> result = new();
         foreach (InventoryItemData item in compartment)
         {
@@ -96,7 +90,6 @@ public class UIEquipmentDisplay : UIMenu
         return result;
     }
 
-    // Up/down between neighbours with wrap-around.
     private static void SetVerticalNavigation(List<Button> buttons)
     {
         for (int i = 0; i < buttons.Count; i++)

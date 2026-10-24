@@ -6,7 +6,7 @@ public class EquipmentData
 {
     public WeaponItemSO equippedWeapon;
     public Dictionary<EquipmentSlot, int> equipment = new();
-
+    public event Action OnEquipmentUpdated;
     public EquipmentData()
     {
         equipment.Add(EquipmentSlot.WEAPON, -1);
@@ -39,15 +39,19 @@ public class EquipmentData
        // equipment[armor.equipmentSlot] = armorToEquip;
     }
 
-    public void EquipItem(int itemToEquip)
+    public void EquipItem(int itemToEquip, bool isPreview = false)
     {
         EquipmentItemSO equipmentItem = InventoryController.Instance.GetItemData(itemToEquip) as EquipmentItemSO;
         equipment[equipmentItem.equipmentSlot] = itemToEquip;
+        if(!isPreview) InventoryController.Instance.RemoveItem(itemToEquip);
+        OnEquipmentUpdated?.Invoke();
     }
 
-    public void RemoveItem(EquipmentSlot slot)
+    public void RemoveItem(EquipmentSlot slot, bool isPreview = false)
     {
+        if(equipment[slot] >= 0 && !isPreview) InventoryController.Instance.AddItem(equipment[slot]);
         equipment[slot] = -1;
+        OnEquipmentUpdated?.Invoke();
     }
     public void InitializeEquipment(Dictionary<EquipmentSlot, EquipmentItemSO> equipment_)
     {

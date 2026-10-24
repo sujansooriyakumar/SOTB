@@ -26,7 +26,7 @@ public class CombatParticipantData
     public CombatStats stats;
 
     public EquipmentData equipmentData;
-
+    public event Action<CombatParticipantData> OnCharacterUpdated;
     public CombatParticipantData(CombatParticipantSO config)
     {
         characterName = config.character.characterName;
@@ -42,7 +42,7 @@ public class CombatParticipantData
 
         equipmentData = new EquipmentData();
         equipmentData.InitializeEquipment(config.equipment);
-
+        equipmentData.OnEquipmentUpdated += RefreshStats;
       /*  if (config.equippedWeapon != null)
         {
             equipmentData.EquipWeapon(config.equippedWeapon.uID);
@@ -54,6 +54,12 @@ public class CombatParticipantData
         attributeWeaknesses = config.attributeWeaknesses;
         typeWeaknesses = config.typeWeaknesses;
         CalculateSubstats(stats, equipmentData);
+    }
+
+    public void RefreshStats()
+    {
+        CalculateSubstats(stats, equipmentData);
+        OnCharacterUpdated?.Invoke(this);
     }
 
     public void CalculateSubstats(CombatStats stats_, EquipmentData equipmentData_)
@@ -73,17 +79,15 @@ public class CombatParticipantData
         EquipmentData newEquipData = equipmentData.CopyEquipement();
         if (newEquip >= 0)
         {
-            newEquipData.EquipItem(newEquip);
+            newEquipData.EquipItem(newEquip, true);
         }
         else
         {
-            newEquipData.RemoveItem(slot);
+            newEquipData.RemoveItem(slot, true);
         }
             CalculateSubstats(newStats, newEquipData);
         return newStats;
     }
-
-
 
     private static WeaponItemSO GetWeapon(EquipmentData equipmentData_)
     {

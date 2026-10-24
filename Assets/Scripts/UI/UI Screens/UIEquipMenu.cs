@@ -7,9 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// Two modes in one screen:
-//   Character mode: party list is interactable, slot panel is visible but dimmed.
-//   Slot mode:      slot panel is interactable for the chosen character. Cancel goes back.
+
 public class UIEquipMenu : UIMenu
 {
     private const string EmptySlotText = "---";
@@ -28,15 +26,8 @@ public class UIEquipMenu : UIMenu
 
     [Header("Equipment Slots")]
     [Tooltip("In order: weapon, head, chest, legs, arms, accessoy.")]
-    //[SerializeField] private Button[] slotButtons;
     public List<EquipmentSlotDisplay> slotDisplays = new();
     Button[] slotButtons;
-    /*    [SerializeField] private TMP_Text weaponSlot;
-        [SerializeField] private TMP_Text headArmorSlot;
-        [SerializeField] private TMP_Text chestArmorSlot;
-        [SerializeField] private TMP_Text legsArmorSlot;
-        [SerializeField] private TMP_Text armsArmorSlot;
-        [SerializeField] private TMP_Text accessorySlot;*/
 
     [Header("Stats")]
     [SerializeField] private StatDisplay statDisplay;
@@ -44,6 +35,7 @@ public class UIEquipMenu : UIMenu
     private readonly List<CharacterDisplayButton> partyButtons = new();
     private CombatParticipantData selectedParticipant;
     private GameObject selectedCharacterButton;
+    private EquipmentSlot selectedSlot;
     private bool choosingSlot;
 
     private void Awake()
@@ -69,12 +61,12 @@ public class UIEquipMenu : UIMenu
         foreach (CombatParticipantData participant in PartyManager.Instance.GetParty())
         {
             GameObject buttonObject = Instantiate(buttonPrefab, partyButtonParent);
+            participant.OnCharacterUpdated += PreviewPartyMember;
             if (!buttonObject.TryGetComponent(out CharacterDisplayButton characterButton)) continue;
 
             characterButton.InitializeButton(participant);
             characterButton.OnSelected += PreviewPartyMember;
 
-            // Submit/click on a character switches to slot mode for that character.
             if (buttonObject.TryGetComponent(out Button button))
             {
                 button.onClick.AddListener(() => EnterSlotMode(participant, buttonObject));
@@ -113,7 +105,6 @@ public class UIEquipMenu : UIMenu
         return partyButtons.Count > 0 ? partyButtons[0].gameObject : null;
     }
 
-    // Cancel in slot mode goes back to the character list instead of closing the menu.
     public override bool HandleCancel()
     {
         if (!choosingSlot) return false;
@@ -143,14 +134,22 @@ public class UIEquipMenu : UIMenu
 
     private void OnSlotChosen(EquipmentSlot slotIndex)
     {
-        // Next step: open an item list for this slot, e.g.
-        // UIController.Instance.Open<UIEquipItemList>(m => m.Setup(selectedParticipant, slotIndex));
+
         Debug.Log($"Chose slot {slotIndex} for {selectedParticipant}");
         UIEquipmentDisplay equipmentList = UIController.Instance.Open<UIEquipmentDisplay>(m => m.SetEquipmentType(slotIndex, selectedParticipant.equipmentData.equipment[slotIndex]));
         equipmentList.onItemSelected += PreviewNewEquipment;
-       
+        equipmentList.onItemChosen += HandleEquipment;
+        selectedSlot = slotIndex;
     }
-
+    private void HandleEquipment(int uid) {
+        if(uid >= 0) selectedParticipant.equipmentData.EquipItem(uid);
+        else
+        {
+            selectedParticipant.equipmentData.RemoveItem(selectedSlot);
+        }
+        UIController.Instance.ReturnTo<UIEquipMenu>();
+        
+    }
     private void PreviewNewEquipment(int newEquipment, EquipmentSlot slot)
     {
         CombatStats newStats = selectedParticipant.PreviewStats(newEquipment, slot);
@@ -160,13 +159,6 @@ public class UIEquipMenu : UIMenu
     private void PreviewPartyMember(CombatParticipantData participant)
     {
         EquipmentData equipmentData = participant.equipmentData;
-
-       /* weaponSlot.text = GetEquipmentName(equipmentData, EquipmentSlot.WEAPON);
-        headArmorSlot.text = GetEquipmentName(equipmentData, EquipmentSlot.HEAD);
-        chestArmorSlot.text = GetEquipmentName(equipmentData, EquipmentSlot.CHEST);
-        legsArmorSlot.text = GetEquipmentName(equipmentData, EquipmentSlot.LEGS);
-        armsArmorSlot.text = GetEquipmentName(equipmentData, EquipmentSlot.ARMS);
-        accessorySlot.text = GetEquipmentName(equipmentData, EquipmentSlot.ACCESSORY);*/
 
        for(int i = 0; i < slotDisplays.Count; i++)
         {
@@ -203,7 +195,6 @@ public class UIEquipMenu : UIMenu
         return EmptySlotText;
     }
 
-    // Up/down between neighbours with wrap-around, so the cursor can't jump to the other panel.
     private static void SetVerticalNavigation(Selectable[] selectables)
     {
         for (int i = 0; i < selectables.Length; i++)
