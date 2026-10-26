@@ -6,14 +6,14 @@ using static UnityEngine.Rendering.DebugUI;
 [CreateAssetMenu(fileName = "ConsumableItemSO", menuName = "SOTB/Inventory/ConsumableItemSO")]
 public class ConsumableItemSO : SellableItemSO
 {
-    public List<EffectSO> effects;
+    public List<ItemEffectSO> effects;
     public bool usableInBattle;
     public bool usableOutOfBattle;
 
     public bool UseItem(CombatParticipantData target)
     {
         bool usable = false;
-        foreach(EffectSO effect in effects)
+        foreach(ItemEffectSO effect in effects)
         {
            usable |= effect.ExecuteEffect(target);
            
@@ -27,7 +27,7 @@ public class ConsumableItemSO : SellableItemSO
 
         foreach (CombatParticipantData target in targets)
         {
-            foreach (EffectSO effect in effects)
+            foreach (ItemEffectSO effect in effects)
             {
                 usable |= effect.ExecuteEffect(target);
             }

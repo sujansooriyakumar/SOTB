@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class EffectSO : ScriptableObject
+public abstract class ItemEffectSO : ScriptableObject
 {
     public abstract bool ExecuteEffect(CombatParticipantData target);
 }

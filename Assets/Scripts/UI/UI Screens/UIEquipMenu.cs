@@ -37,6 +37,7 @@ public class UIEquipMenu : UIMenu
     private GameObject selectedCharacterButton;
     private EquipmentSlot selectedSlot;
     private bool choosingSlot;
+    private readonly List<CombatParticipantData> subscribedParticipants = new();
 
     private void Awake()
     {
@@ -62,6 +63,8 @@ public class UIEquipMenu : UIMenu
         {
             GameObject buttonObject = Instantiate(buttonPrefab, partyButtonParent);
             participant.OnCharacterUpdated += PreviewPartyMember;
+            subscribedParticipants.Add(participant);
+
             if (!buttonObject.TryGetComponent(out CharacterDisplayButton characterButton)) continue;
 
             characterButton.InitializeButton(participant);
@@ -86,6 +89,9 @@ public class UIEquipMenu : UIMenu
     }
     protected override void OnClose()
     {
+        foreach (CombatParticipantData p in subscribedParticipants)
+            p.OnCharacterUpdated -= PreviewPartyMember;
+        subscribedParticipants.Clear();
         foreach (CharacterDisplayButton button in partyButtons)
         {
             button.OnSelected -= PreviewPartyMember;

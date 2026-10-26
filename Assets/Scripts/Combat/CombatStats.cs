@@ -39,6 +39,13 @@ public class CombatStats
         return stats[stat];
     }
 
+ 
+
+    public void SetStat(CombatStat stat, int newValue)
+    {
+        stats[stat] = newValue;
+    }
+
     public CombatStats CopyStats()
     {
         CombatStats copy = new CombatStats();

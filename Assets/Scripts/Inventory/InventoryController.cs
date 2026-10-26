@@ -36,7 +36,7 @@ public class InventoryController : MonoBehaviour
 
     public ItemSO GetItemData(int uid)
     {
-        return itemDictionary[uid];
+        return itemDictionary[uid]; 
     }
     public void InitializeDatabase()
     {

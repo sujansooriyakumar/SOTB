@@ -27,6 +27,8 @@ public class CombatParticipantData
 
     public EquipmentData equipmentData;
     public event Action<CombatParticipantData> OnCharacterUpdated;
+    public event Action OnCharacterDead;
+    private StatModController statModController;
     public CombatParticipantData(CombatParticipantSO config)
     {
         characterName = config.character.characterName;
@@ -53,9 +55,24 @@ public class CombatParticipantData
 
         attributeWeaknesses = config.attributeWeaknesses;
         typeWeaknesses = config.typeWeaknesses;
+        statModController = new StatModController(this);
         CalculateSubstats(stats, equipmentData);
     }
 
+    public void ActivateStatMod(StatMod statMod)
+    {
+        statModController.InitializeStatMod(statMod);
+    }
+    public void ModHP(float mod)
+    {
+        currentHP += Mathf.CeilToInt(mod);
+        OnCharacterUpdated?.Invoke(this);
+        if(currentHP <= 0)
+        {
+            OnCharacterDead?.Invoke();
+        }
+    }
+    
     public void RefreshStats()
     {
         CalculateSubstats(stats, equipmentData);

@@ -1,7 +1,7 @@
 using UnityEngine;
-[CreateAssetMenu(fileName = "DamageEffectSO", menuName = "SOTB/Effects/Damage")]
+[CreateAssetMenu(fileName = "ItemDamageEffectSO", menuName = "SOTB/Effects/Items/ItemDamageEffect")]
 
-public class DamageEffectSO : EffectSO
+public class ItemDamageEffectSO : ItemEffectSO
 {
     public DamageType damageType;
     public DamageAttribute damageAttribute;

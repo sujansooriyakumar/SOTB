@@ -47,6 +47,11 @@ public class EquipmentData
         OnEquipmentUpdated?.Invoke();
     }
 
+    public EquipmentItemSO GetEquipement(EquipmentSlot equipmentSlot)
+    {
+        return InventoryController.Instance.GetItemData(equipment[equipmentSlot]) as EquipmentItemSO;
+    }
+
     public void RemoveItem(EquipmentSlot slot, bool isPreview = false)
     {
         if(equipment[slot] >= 0 && !isPreview) InventoryController.Instance.AddItem(equipment[slot]);

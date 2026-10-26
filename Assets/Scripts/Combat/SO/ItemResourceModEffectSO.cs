@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ResourceModEffectSO", menuName = "SOTB/Effects/ResourceModEffectSO")]
-public class ResourceModEffectSO : EffectSO
+[CreateAssetMenu(fileName = "ItemResourceModEffectSO", menuName = "SOTB/Effects/ItemResourceModEffectSO")]
+public class ItemResourceModEffectSO : ItemEffectSO
 {
     public ResourceType resourceType;
     public int effectValue;

@@ -1,9 +1,9 @@
 using System.IO;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ResourceModEffectSO", menuName = "SOTB/Effects/StatModEffectSO")]
+[CreateAssetMenu(fileName = "ResourceModEffectSO", menuName = "SOTB/Effects/ItemStatModEffectSO")]
 
-public class StatModEffectSO: EffectSO
+public class ItemStatModEffectSO: ItemEffectSO
 {
     public CombatStat stat;
     public int stage;

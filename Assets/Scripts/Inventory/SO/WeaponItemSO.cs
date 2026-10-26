@@ -9,6 +9,7 @@ public class WeaponItemSO : EquipmentItemSO
     public DamageAttribute damageAttribute;
     public int weaponStrength;
     public CombatStat[] damageStat;
+    public int baseAttackStrength;
 
     private void Reset()
     {
