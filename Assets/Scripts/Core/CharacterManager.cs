@@ -23,4 +23,9 @@ public class CharacterManager : MonoBehaviour
     {
         return characterDictionary[characterID];
     }
+
+    public Sprite GetSprite(int characterID)
+    {
+        return characterDictionary[characterID].characterPortrait;
+    }
 }

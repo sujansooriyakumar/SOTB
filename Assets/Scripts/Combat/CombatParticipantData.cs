@@ -27,7 +27,7 @@ public class CombatParticipantData
 
     public EquipmentData equipmentData;
     public event Action<CombatParticipantData> OnCharacterUpdated;
-    public event Action OnCharacterDead;
+    public event Action<CombatParticipantData> OnCharacterDead;
     private StatModController statModController;
     public CombatParticipantData(CombatParticipantSO config)
     {
@@ -69,7 +69,7 @@ public class CombatParticipantData
         OnCharacterUpdated?.Invoke(this);
         if(currentHP <= 0)
         {
-            OnCharacterDead?.Invoke();
+            OnCharacterDead?.Invoke(this);
         }
     }
     

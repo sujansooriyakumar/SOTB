@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: 002 - Wolf
   m_EditorClassIdentifier: Assembly-CSharp::CharacterSO
   characterID: 2
-  characterPortrait: {fileID: 0}
+  characterPortrait: {fileID: -1019175178, guid: 7f31daaf51e97b043a64d7cd0b403477, type: 3}
   characterName: Wolf
