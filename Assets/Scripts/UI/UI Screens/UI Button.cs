@@ -2,12 +2,14 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIButton : MonoBehaviour, ISelectHandler, IDeselectHandler
 {
     public GameObject selectedObject;
     public UnityEvent onSelect;
     public UnityEvent onDeselect;
+  
     public void OnSelect(BaseEventData eventData)
     {
         selectedObject.SetActive(true);
@@ -33,4 +35,6 @@ public class UIButton : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         if (selectedObject != null) selectedObject.SetActive(false);
     }
+
+ 
 }

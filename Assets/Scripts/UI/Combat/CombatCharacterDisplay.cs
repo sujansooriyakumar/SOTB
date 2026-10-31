@@ -12,6 +12,9 @@ public class CombatCharacterDisplay : MonoBehaviour
 
     private float currentHP;
     private float currentSP;
+    private CombatParticipantData characterRef;
+
+
 
     public void InitUI(CombatParticipantData character)
     {
@@ -21,7 +24,14 @@ public class CombatCharacterDisplay : MonoBehaviour
         spBar.fillAmount = (float)character.currentSP/(float)character.maxSP;
         currentHP = character.currentHP; 
         currentSP = character.currentSP;
+        characterRef = character;
+        character.OnCharacterUpdated += InitUpdate;
 
+    }
+
+    private void OnDestroy()
+    {
+        characterRef.OnCharacterUpdated -= InitUpdate;
     }
 
     public void InitUpdate(CombatParticipantData character)
@@ -37,7 +47,7 @@ public class CombatCharacterDisplay : MonoBehaviour
         float startHP = hpBar.fillAmount;
         float startSP = spBar.fillAmount;
 
-        float duration = 0.5f;
+        float duration = 1.0f;
         float elapsed = 0f;
 
         while (elapsed < duration)

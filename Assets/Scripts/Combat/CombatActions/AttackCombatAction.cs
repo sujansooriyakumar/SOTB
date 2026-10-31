@@ -12,6 +12,11 @@ public class AttackCombatAction : CombatAction
         this.attacker = attacker_;
         this.target = target_;
     }
+
+    public AttackCombatAction(CombatParticipantData attacker_)
+    {
+        this.attacker = attacker_;
+    }
     public override void ExecuteAction()
     {
         AttackData attack = new AttackData(attacker.equipmentData.GetEquipement(EquipmentSlot.WEAPON) as WeaponItemSO);

@@ -44,7 +44,7 @@ public class BattleManager : MonoBehaviour
     {
         battleState = new BattleState(encounter_);
         UIController.Instance.Open<UICombatScreen>(p => p.SetBattleState(battleState));
-      
+        StartCoroutine(BattleCoroutine());
 
        
         
@@ -52,7 +52,8 @@ public class BattleManager : MonoBehaviour
     [ContextMenu("End Turn")]
     public void DebugTurnEnd()
     {
-        battleState.enemyTeam[0].ModHP(-400);
+        battleState.enemyTeam[0].ModHP(-100);
+        battleState.enemyTeam[1].ModHP(-100);
         battleState.EndTurn();
     }
     private IEnumerator BattleCoroutine()

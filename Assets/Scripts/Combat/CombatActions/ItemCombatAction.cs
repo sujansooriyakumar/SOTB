@@ -6,9 +6,9 @@ using UnityEngine;
 public class ItemCombatAction : CombatAction
 {
     private ConsumableItemSO itemToUse;
-    private CombatParticipantData[] targets;
+    private List<CombatParticipantData> targets;
     public override event Action OnActionComplete;
-    public ItemCombatAction(ConsumableItemSO itemToUse_, CombatParticipantData[] targets_)
+    public ItemCombatAction(ConsumableItemSO itemToUse_, List<CombatParticipantData> targets_)
     {
         itemToUse = itemToUse_;
         targets = targets_;

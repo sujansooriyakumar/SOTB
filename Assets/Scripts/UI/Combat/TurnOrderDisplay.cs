@@ -23,7 +23,7 @@ public class TurnOrderDisplay : MonoBehaviour
     public void InitializeTurnOrder(BattleState battleState)
     {
         stateRef = battleState;
-        stateRef.OnBattleStateChanged += InitUpdate;
+        stateRef.OnBattleStateChanged += RequestTurnOrderUpdate;
         turnOrder = battleState.turnOrder;
 
         for (int i = turnOrder.Count * 6; i >= 0; i--)
@@ -53,20 +53,32 @@ public class TurnOrderDisplay : MonoBehaviour
             spawnedIcons[i].SetParticipantRef(turnOrderList[j]);
 
         }
-        /*
-         * get first  to go
-         * instnatiate images to parent
-         * map to placeholders
-         * scale up current turn player 
-         * 
-         * on update:
-         * spawn player outside of top 6 outside of cam (ie if turnorder.count > 6 spawn next player,
-         * otherwise loop again
-         * fade out current turn player
-         * destroy current turn player object
-         * lerp all players to next order
-         * lerp scale up from next to go to current player
-         */
+        
+    }
+    private BattleState pendingState;
+    private bool processQueued;
+
+    // call this instead of StartCoroutine(UpdateTurnOrder(state))
+    public void RequestTurnOrderUpdate(BattleState state)
+    {
+        pendingState = state; // newest state always wins
+        if (processQueued) return;
+
+        processQueued = true;
+        StartCoroutine(ProcessTurnOrder());
+    }
+
+    private IEnumerator ProcessTurnOrder()
+    {
+        yield return null; // let same-frame updates land and overwrite pendingState
+
+        while (isAnimating) yield return null; // newer states keep overwriting pendingState meanwhile
+
+        BattleState state = pendingState;
+        pendingState = null;
+        processQueued = false;
+
+        yield return UpdateTurnOrder(state);
     }
     private void InitUpdate(BattleState battleState) {  
         StartCoroutine(UpdateTurnOrder(battleState));
@@ -93,45 +105,54 @@ public class TurnOrderDisplay : MonoBehaviour
             yield break;
         }
 
-        // hash set for easier checks
         HashSet<CombatParticipantData> alive = new(newOrder);
 
-        // check if turn advanced
         bool turnAdvanced = newOrder.Count > 0 &&
                             (!alive.Contains(oldOrder[0]) || newOrder[0] != oldOrder[0]);
 
-        // store icons that need to leave
-        List<TurnOrderIcon> leaving = new();
+        // split leaving icons into two groups
+        List<TurnOrderIcon> dead = new();
+        List<TurnOrderIcon> endedTurn = new();
         for (int i = 0; i < spawnedIcons.Count; i++)
         {
             CombatParticipantData p = oldOrder[i % oldOrder.Count];
-            bool died = !alive.Contains(p);
-            bool endedTurn = turnAdvanced && i == 0;
-            if (died || endedTurn)
-                leaving.Add(spawnedIcons[i]);
+            if (!alive.Contains(p))
+                dead.Add(spawnedIcons[i]);
+            else if (turnAdvanced && i == 0)
+                endedTurn.Add(spawnedIcons[i]); // only if the turn player survived
         }
 
-        // update current order and end early if no update required
-        if (leaving.Count == 0)
+        if (dead.Count == 0 && endedTurn.Count == 0)
         {
             currentOrder = newOrder;
             isAnimating = false;
             yield break;
         }
 
-        // remove leaving icons from spanwed list
         currentOrder = newOrder;
-        foreach (TurnOrderIcon icon in leaving)
-            spawnedIcons.Remove(icon);
 
-        // fade all leaving icons
-        List<Coroutine> fades = new();
-        foreach (TurnOrderIcon icon in leaving)
-            fades.Add(StartCoroutine(FadeIcon(icon.gameObject, 1.0f)));
-        foreach (Coroutine fade in fades)
-            yield return fade;
+        // phase 1: fade all dead icons simultaneously
+        if (dead.Count > 0)
+        {
+            foreach (TurnOrderIcon icon in dead)
+                spawnedIcons.Remove(icon);
+            yield return FadeGroup(dead);
+        }
 
-        // destroy all icons if battle over
+        // phase 2: fade the turn player's icon
+        if (endedTurn.Count > 0)
+        {
+            foreach (TurnOrderIcon icon in endedTurn)
+                spawnedIcons.Remove(icon);
+            yield return FadeGroup(endedTurn);
+        }
+
+        // pool of faded icons available for reuse
+        List<TurnOrderIcon> leaving = new();
+        leaving.AddRange(dead);
+        leaving.AddRange(endedTurn);
+
+        // destroy everything if battle over
         if (newOrder.Count == 0)
         {
             foreach (TurnOrderIcon icon in leaving) Destroy(icon.gameObject);
@@ -141,7 +162,7 @@ public class TurnOrderDisplay : MonoBehaviour
             yield break;
         }
 
-        // refill queue
+        // phase 3: refill queue
         int target = Mathf.Min(Mathf.Max(6, newOrder.Count), references.Count - 1);
         while (spawnedIcons.Count < target)
         {
@@ -168,11 +189,10 @@ public class TurnOrderDisplay : MonoBehaviour
             spawnedIcons.Add(icon);
         }
 
-        // destroy leftover icons
         foreach (TurnOrderIcon icon in leaving)
             Destroy(icon.gameObject);
 
-        // start slides
+        // phase 4: slide everything down
         List<Coroutine> slides = new();
         for (int i = 0; i < spawnedIcons.Count; i++)
         {
@@ -188,6 +208,16 @@ public class TurnOrderDisplay : MonoBehaviour
             spawnedIcons[i].SetParticipantRef(newOrder[i % newOrder.Count]);
 
         isAnimating = false;
+    }
+
+    // fades a group of icons at the same time and waits for all of them
+    private IEnumerator FadeGroup(List<TurnOrderIcon> icons)
+    {
+        List<Coroutine> fades = new();
+        foreach (TurnOrderIcon icon in icons)
+            fades.Add(StartCoroutine(FadeIcon(icon.gameObject, 1.0f)));
+        foreach (Coroutine fade in fades)
+            yield return fade;
     }
 
     private IEnumerator SlideIconDown(RectTransform icon, RectTransform nextPos)
@@ -228,8 +258,7 @@ public class TurnOrderDisplay : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
-        // move other icons down
-        // spawn in prev destroyed icon at top of list
+
         SetAlpha(0f, i);
     }
 

@@ -15,8 +15,5 @@ MonoBehaviour:
   enemies:
   - {fileID: 11400000, guid: 769a47cefbbc36c459deddcd2436511f, type: 2}
   - {fileID: 11400000, guid: 769a47cefbbc36c459deddcd2436511f, type: 2}
-  - {fileID: 11400000, guid: 769a47cefbbc36c459deddcd2436511f, type: 2}
-  - {fileID: 11400000, guid: 769a47cefbbc36c459deddcd2436511f, type: 2}
-  - {fileID: 11400000, guid: 769a47cefbbc36c459deddcd2436511f, type: 2}
   expReward: 0
   moneyReward: 0
